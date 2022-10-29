@@ -12,7 +12,15 @@ namespace ModelThesis
         /// <summary>
         /// Достоверный код качества ТИ
         /// </summary>
-        private const string _goodQuality = "10000002";
+        private readonly string[] _goodQualitys = 
+            new string[] 
+            {
+                "10000002",
+                "10004000",
+                "10008000",
+                "10010000",
+                "10020000"
+            };
 
         /// <summary>
         /// Входные данные
@@ -56,8 +64,8 @@ namespace ModelThesis
 
             for (int i = 0; i < this.InputData.Length; i++)
             {
-                if (Convert.ToString
-                    (this.InputData[i].QualityCodes, 16) == _goodQuality)
+                if (Array.Exists(_goodQualitys, value => value ==
+                    Convert.ToString(this.InputData[i].QualityCodes, 16)))
                 {
                     validDataList.Add(this.InputData[i]);
                 }

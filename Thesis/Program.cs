@@ -12,8 +12,12 @@ namespace ConsoleApp
         {
             var signalGuid1 = new Guid("65CCCE53-5914-49E7-9623-BB914962C46A");
             var signalGuid2 = new Guid("7443900b-9a2a-436d-a284-cc9400bb75dd");
-            //good 10000002
+            
             var uidsArray = new Guid[] { signalGuid1, signalGuid2 };
+
+            var uidsVoltageSignals
+            var uidsCurrentSignals
+            var uidsPowerSignals
 
             var signalsData = new DataRequest(_connectionStringToRtdb);
 
