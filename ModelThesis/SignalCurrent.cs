@@ -8,12 +8,12 @@
         /// <summary>
         /// АДТН ЛЭП
         /// </summary>
-        private float _maxCurrent;
+        private double _maxCurrent;
 
         /// <summary>
         /// АДТН ЛЭП
         /// </summary>
-        public float MaxCurrent
+        public double MaxCurrent
         {
             get => _maxCurrent;
             set => _maxCurrent = CheckValue(value);
@@ -25,8 +25,8 @@
         /// <param name="signalName">Название ЛЭП</param>
         /// <param name="signalValue">Значение тока</param>
         /// <param name="maxCurrent">АДТН ЛЭП</param>
-        public SignalCurrent(string signalName,float signalValue,
-            float maxCurrent) : base (signalName, signalValue)
+        public SignalCurrent(string signalName, double signalValue,
+            double maxCurrent) : base (signalName, signalValue)
         {
             MaxCurrent = maxCurrent;
         }

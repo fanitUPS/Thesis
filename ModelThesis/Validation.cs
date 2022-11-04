@@ -62,6 +62,8 @@ namespace ModelThesis
         {
             var validDataList = new List<Ck.RtdbValue>();
 
+            var notValid = new Ck.RtdbValue();
+            
             for (int i = 0; i < this.InputData.Length; i++)
             {
                 if (Array.Exists(_goodQualitys, value => value ==
@@ -69,8 +71,12 @@ namespace ModelThesis
                 {
                     validDataList.Add(this.InputData[i]);
                 }
+                else
+                {
+                    validDataList.Add(notValid);
+                }
             }
-
+            
             return validDataList.ToArray();
         }
     }

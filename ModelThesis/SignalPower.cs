@@ -8,12 +8,12 @@
         /// <summary>
         /// МДП в КС
         /// </summary>
-        private float _maxPower;
+        private double _maxPower;
 
         /// <summary>
         /// МДП в КС
         /// </summary>
-        public float MaxPower
+        public double MaxPower
         {
             get => _maxPower;
             set => _maxPower = CheckValue(value);
@@ -25,8 +25,8 @@
         /// <param name="signalName">Название КС</param>
         /// <param name="signalValue">Значение мощности</param>
         /// <param name="maxPower">МДП в КС</param>
-        public SignalPower(string signalName, float signalValue,
-            float maxPower) : base(signalName, signalValue)
+        public SignalPower(string signalName, double signalValue,
+            double maxPower) : base(signalName, signalValue)
         {
             MaxPower = maxPower;
         }

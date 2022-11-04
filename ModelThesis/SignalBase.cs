@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Ck = Monitel.Rtdb.Api;
 namespace ModelThesis
 {
     /// <summary>
@@ -14,22 +10,17 @@ namespace ModelThesis
         /// <summary>
         /// Название объекта
         /// </summary>
-        private string _signalName;
-
-        /// <summary>
-        /// Название объекта
-        /// </summary>
         public string SignalName { get; set; }
 
         /// <summary>
         /// Значение ТИ
         /// </summary>
-        private float _signalValue;
+        private double _signalValue;
 
         /// <summary>
         /// Значение ТИ
         /// </summary>
-        public float SignalValue
+        public double SignalValue
         {
             get => _signalValue;
             set => _signalValue = CheckValue(value);
@@ -40,7 +31,7 @@ namespace ModelThesis
         /// </summary>
         /// <param name="signalName">Название объекта</param>
         /// <param name="signalValue">Значение ТИ</param>
-        protected SignalBase(string signalName, float signalValue)
+        protected SignalBase(string signalName, double signalValue)
         {
             SignalName = signalName;
             SignalValue = signalValue;
@@ -51,11 +42,12 @@ namespace ModelThesis
         /// </summary>
         /// <param name="value">Значение ТИ</param>
         /// <returns>Проверенное значение ТИ</returns>
-        protected float CheckValue(float value)
+        protected double CheckValue(double value)
         {
             if (value < 0)
             {
-                throw new ArgumentException("Значение ТИ не может быть меньше нуля.");
+                throw new ArgumentException
+                    ("Значение ТИ не может быть меньше нуля.");
             }
 
             return value;

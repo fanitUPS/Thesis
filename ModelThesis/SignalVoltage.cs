@@ -8,17 +8,17 @@
         /// <summary>
         /// Верхняя граница напряжения объекта
         /// </summary>
-        private float _maxVoltage;
+        private double _maxVoltage;
 
         /// <summary>
         /// Нижняя граница напряжения объекта
         /// </summary>
-        private float _minVoltage;
+        private double _minVoltage;
 
         /// <summary>
         /// Верхняя граница напряжения объекта
         /// </summary>
-        public float MaxVoltage
+        public double MaxVoltage
         {
             get => _maxVoltage;
             set => _maxVoltage = CheckValue(value);
@@ -27,7 +27,7 @@
         /// <summary>
         /// Нижняя граница напряжения объекта
         /// </summary>
-        public float MinVoltage
+        public double MinVoltage
         {
             get => _minVoltage;
             set => _minVoltage = CheckValue(value);
@@ -40,8 +40,8 @@
         /// <param name="signalValue">Значение напряжения</param>
         /// <param name="maxVoltage">Верхняя граница напряжения объекта</param>
         /// <param name="minVoltage">Нижняя граница напряжения объекта</param>
-        public SignalVoltage(string signalName, float signalValue,
-            float maxVoltage, float minVoltage)
+        public SignalVoltage(string signalName, double signalValue,
+            double maxVoltage, double minVoltage)
             : base(signalName, signalValue)
         {
             MaxVoltage = maxVoltage;

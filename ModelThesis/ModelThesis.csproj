@@ -31,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Monitel.Rtdb.Api">
+    <Reference Include="Monitel.Rtdb.Api, Version=3.0.7082.28397, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Thesis\bin\Debug\Monitel.Rtdb.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Pandas.NET">
+      <HintPath>..\packages\Pandas.NET.0.3.0\lib\netstandard2.0\Pandas.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
