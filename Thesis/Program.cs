@@ -1,6 +1,8 @@
 ﻿using System;
 using ModelThesis;
 using System.Collections.Generic;
+using PandasNet;
+using Pd = Microsoft.Data.Analysis;
 
 namespace ConsoleApp
 {
@@ -70,16 +72,44 @@ namespace ConsoleApp
                     signalVoltageArr,
                     signalCurrent);
 
-                Console.WriteLine(nameof(preparingData.CurrentSignals));
+                //var valueColumn = new Pd.PrimitiveDataFrameColumn<float>("Value", 3);
+                //var maxValueColumn = new Pd.PrimitiveDataFrameColumn<float>("MaxValue", 3);
+                //var df = new Pd.DataFrame(valueColumn, maxValueColumn);
+
+                //var newValue = new Pd.PrimitiveDataFrameColumn<float>("New", 2);
+                //var df2 = new Pd.DataFrame(newValue);
+
+
+                //Console.WriteLine(df);
+                //df[0, 0] = (float)10;
+                //df[0, 1] = (float)100;
+
+                //df[1, 0] = (float)77;
+                //df[1, 1] = (float)777;
+
+
+                //df2[0, 0] = (float)4;
+                //df2[1, 0] = (float)400;
+                ////df.Add(data);
+                //df["Value"].Add((float)1000, inPlace: true);
+
+                //var ter = df.Join(df2);
+
+                //Console.WriteLine(ter);
+
+
+
 
                 var currentData = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
                 Console.WriteLine(currentData);
 
                 var powerData = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
                 Console.WriteLine(powerData);
-                var voltageData = preparingData.PreparingNodeData();
 
+                var voltageData = preparingData.PreparingNodeData();
                 Console.WriteLine(voltageData);
+
+                
 
                 Console.ReadKey();
             }

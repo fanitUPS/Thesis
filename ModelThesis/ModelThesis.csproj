@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Data.Analysis">
+      <HintPath>..\packages\Microsoft.Data.Analysis.0.20.0\lib\netstandard2.0\Microsoft.Data.Analysis.dll</HintPath>
+    </Reference>
     <Reference Include="Monitel.Rtdb.Api, Version=3.0.7082.28397, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Thesis\bin\Debug\Monitel.Rtdb.Api.dll</HintPath>
@@ -48,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculation.cs" />
     <Compile Include="PreparingData.cs" />
     <Compile Include="SignalBase.cs" />
     <Compile Include="SignalCurrent.cs" />
