@@ -21,8 +21,10 @@ namespace ConsoleApp
             //Гуиды созданных в системе телеизмерений
             var signalGuid1 = new Guid("65CCCE53-5914-49E7-9623-BB914962C46A");
             var signalGuid2 = new Guid("7443900b-9a2a-436d-a284-cc9400bb75dd");
+            var signalGuid3 = new Guid("CC2FD1EB-C5CD-4FC5-8E6E-8D5E368985B3");
+            var signalGuid4 = new Guid("C47538AB-7CBE-4D91-851B-83571B4A461F");
             //Запрос данных осуществляется через массив гуидов
-            var uidsArray = new Guid[] { signalGuid1, signalGuid2 };
+            var uidsArray = new Guid[] { signalGuid1, signalGuid2, signalGuid3, signalGuid4 };
             //Создаем экземпляр класса, для запроса данных
             var dataRequest = new DataRequest(_connectionStringToRtdb);
 
@@ -44,13 +46,15 @@ namespace ConsoleApp
                 var voltage = new SignalVoltage
                     ("someName",
                     validDataValue[0].Value.AnalogValue,
-                    validDataMaxValue[0].Value.AnalogValue,
-                    validDataMinValue[0].Value.AnalogValue);
+                    validDataMaxValue[1].Value.AnalogValue,
+                    validDataMinValue[2].Value.AnalogValue,
+                    validDataMinValue[3].Value.AnalogValue);
 
                 var voltage2 = new SignalVoltage
                    ("someName",
                    validDataValue[1].Value.AnalogValue,
                    validDataMaxValue[1].Value.AnalogValue,
+                   validDataMinValue[1].Value.AnalogValue,
                    validDataMinValue[1].Value.AnalogValue);
 
                 var power = new SignalPower
@@ -72,43 +76,22 @@ namespace ConsoleApp
                     signalVoltageArr,
                     signalCurrent);
 
-                //var valueColumn = new Pd.PrimitiveDataFrameColumn<float>("Value", 3);
-                //var maxValueColumn = new Pd.PrimitiveDataFrameColumn<float>("MaxValue", 3);
-                //var df = new Pd.DataFrame(valueColumn, maxValueColumn);
-
-                //var newValue = new Pd.PrimitiveDataFrameColumn<float>("New", 2);
-                //var df2 = new Pd.DataFrame(newValue);
-
-
-                //Console.WriteLine(df);
-                //df[0, 0] = (float)10;
-                //df[0, 1] = (float)100;
-
-                //df[1, 0] = (float)77;
-                //df[1, 1] = (float)777;
-
-
-                //df2[0, 0] = (float)4;
-                //df2[1, 0] = (float)400;
-                ////df.Add(data);
-                //df["Value"].Add((float)1000, inPlace: true);
-
-                //var ter = df.Join(df2);
-
-                //Console.WriteLine(ter);
-
-
-
-
-                var currentData = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
+                var currentData =
+                    preparingData.PreparingBranchData
+                    (nameof(preparingData.CurrentSignals));
                 Console.WriteLine(currentData);
 
-                var powerData = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
+                var powerData =
+                    preparingData.PreparingBranchData
+                    (nameof(preparingData.PowerSignals));
                 Console.WriteLine(powerData);
 
                 var voltageData = preparingData.PreparingNodeData();
                 Console.WriteLine(voltageData);
 
+                var calcul = new Calculation(powerData, currentData, voltageData);
+
+                Console.WriteLine(calcul.GetPerformanceIndex());
                 
 
                 Console.ReadKey();

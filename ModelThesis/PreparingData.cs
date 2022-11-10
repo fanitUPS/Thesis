@@ -51,15 +51,18 @@ namespace ModelThesis
                 ("MaxVoltage", this.VoltageSignals.Length);
             var minValueColumn = new Pd.PrimitiveDataFrameColumn<double>
                 ("MinVoltage", this.VoltageSignals.Length);
+            var nomValueColumn = new Pd.PrimitiveDataFrameColumn<double>
+                ("NomVoltage", this.VoltageSignals.Length);
 
             var result = new Pd.DataFrame
-                (valueColumn, maxValueColumn, minValueColumn);
+                (valueColumn, maxValueColumn, minValueColumn, nomValueColumn);
 
             for (int i = 0; i < VoltageSignals.Length; i++)
             {
                 result[i, 0] = VoltageSignals[i].SignalValue;
                 result[i, 1] = VoltageSignals[i].MaxVoltage;
                 result[i, 2] = VoltageSignals[i].MinVoltage;
+                result[i, 3] = VoltageSignals[i].NomVoltage;
             }
 
             return result;
@@ -101,6 +104,7 @@ namespace ModelThesis
                         result[i, 1] = CurrentSignals[i].MaxCurrent;
                     }
                     break;
+
                 case nameof(PowerSignals):
                     for (int i = 0; i < PowerSignals.Length; i++)
                     {
@@ -112,49 +116,5 @@ namespace ModelThesis
 
             return result;
         }
-
-            ///// <summary>
-            ///// Преобразование данных тока и мощности
-            ///// </summary>
-            ///// <returns>Датафрейм токов</returns>
-            //public DataFrame PreparingBranchData(string name)
-            //{
-            //    var valueList = new List<double>();
-            //    var maxValueList = new List<double>();
-
-            //    switch (name)
-            //    {
-            //        case nameof(CurrentSignals):
-            //            foreach (var signal in CurrentSignals)
-            //            {
-            //                valueList.Add(signal.SignalValue);
-            //                maxValueList.Add(signal.MaxCurrent);
-            //            }
-            //            break;
-            //        case nameof(PowerSignals):
-            //            foreach (var signal in PowerSignals)
-            //            {
-            //                valueList.Add(signal.SignalValue);
-            //                maxValueList.Add(signal.MaxPower);
-            //            }
-            //            break;
-            //    };
-
-            //    var seriesValue = new Series(valueList.ToArray());
-            //    var seriesMaxValue = new Series(maxValueList.ToArray());
-
-            //    var columnValue = new Column();
-            //    columnValue.Name = "Value";
-            //    var columnMaxValue = new Column();
-            //    columnMaxValue.Name = "MaxValue";
-
-            //    var columnName = new List<Column>()
-            //    { columnValue,
-            //      columnMaxValue
-            //    };
-
-            //    return new DataFrame(new List<Series>()
-            //        { seriesValue, seriesMaxValue}, null, columnName);
-            //}
-        }
+    }
 }
