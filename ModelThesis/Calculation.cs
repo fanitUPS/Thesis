@@ -48,34 +48,31 @@ namespace ModelThesis
             return data;
         }
 
-        public Pd.DataFrame GetPerformanceIndex()
+        public Pd.DataFrame GetVoltageIndex()
         {
-            var fuClm = new Pd.PrimitiveDataFrameColumn<double>("Fu");
-            var flClm = new Pd.PrimitiveDataFrameColumn<double>("Fl");
-            var duClm = new Pd.PrimitiveDataFrameColumn<double>("Du");
-            var dlClm = new Pd.PrimitiveDataFrameColumn<double>("Dl");
-            var guClm = new Pd.PrimitiveDataFrameColumn<double>("Gu");
-            var glClm = new Pd.PrimitiveDataFrameColumn<double>("Gl");
             var upperClm = new Pd.PrimitiveDataFrameColumn<double>("upper");
             var lowerClm = new Pd.PrimitiveDataFrameColumn<double>("lower");
 
             var tempDataframe = new Pd.DataFrame
-                (fuClm, flClm, duClm, dlClm, guClm, glClm, upperClm, lowerClm);
+                (upperClm, lowerClm);
 
             var result = _voltageSignals.Join(tempDataframe);
 
             for (int i = 0; i < result.Rows.Count; i++)
             {
-                var vu = double.Parse(result["MaxVoltage"][i].ToString());
-                var vl = double.Parse(result["MinVoltage"][i].ToString());
-                var vras = double.Parse(result["ValueVoltage"][i].ToString());
-                var uhom = double.Parse(result["NomVoltage"][i].ToString());
+                var vu = Convert.ToDouble(result["MaxVoltage"][i]);
+                var vl = Convert.ToDouble(result["MinVoltage"][i]);
+                var vras = Convert.ToDouble(result["ValueVoltage"][i]);
+                var uhom = Convert.ToDouble(result["NomVoltage"][i]);
 
-                result[i, 4] = vu * 0.95d;
-                result[i, 5] = vl * 1.05d;
+                if (uhom == 0)
+                {
+                    throw new ArgumentException
+                        ("Номинальное напряжение равно 0.");
+                }
 
-                var fu = double.Parse(result["Fu"][i].ToString());
-                var fl = double.Parse(result["Fl"][i].ToString());
+                var fu = vu * 0.95d;
+                var fl = vl * 1.05d;
 
                 var du = 0d;
                 if (vras > fu)
@@ -89,25 +86,98 @@ namespace ModelThesis
                     dl = (-vras + fl) / uhom;
                 }
 
-                result[i, 6] = du;
-                result[i, 7] = dl;
-
                 var gu = (vu - fu) / uhom;
                 var gl = (fl - vl) / uhom;
 
-                result[i, 8] = gu;
-                result[i, 9] = gl;
+                if (gu == 0 || gl == 0)
+                {
+                    throw new ArgumentException
+                        ("Коэффициенты Gu или Gl равны 0.");
+                }
 
                 var upper = Math.Pow(du / gu, 4d);
-                var lower = Math.Pow(dl/gl, 4d);
-                result[i, 10] = Math.Round(upper, 5);
-                result[i, 11] = Math.Round(lower, 5);
+                var lower = Math.Pow(dl / gl, 4d);
+                result[i, 4] = Math.Round(upper, 5);
+                result[i, 5] = Math.Round(lower, 5);
             }
-
-
-
             return result;
+        }
 
+        public Pd.DataFrame GetPowerIndex()
+        {
+            var powerCalcClm = new Pd.PrimitiveDataFrameColumn<double>("powerCalc");
+
+            var tempDataframe = new Pd.DataFrame
+                (powerCalcClm);
+
+            var result = _powerSignals.Join(tempDataframe);
+
+            for (int i = 0; i < result.Rows.Count; i++)
+            {
+                var p = Math.Abs(Convert.ToDouble(result["Value"][i]));
+                var mpf = Convert.ToDouble(result["MaxValue"][i]);
+                const double baseP = 1000d;
+                var preLim = mpf * 0.5;
+
+                var dp = 0d;
+                if (p > preLim)
+                {
+                    dp = (p - preLim) / baseP;
+                }
+
+                var gp = (mpf - preLim) / baseP;
+
+                var powerCalc = Math.Pow(dp / gp, 4d);
+                result[i, 2] = Math.Round(powerCalc, 5);
+
+            }
+            return result;
+        }
+
+        public Pd.DataFrame GetCurrentIndex()
+        {
+            var currentCalcClm = new Pd.PrimitiveDataFrameColumn<double>("currentCalc");
+
+            var tempDataframe = new Pd.DataFrame
+                (currentCalcClm);
+
+            var result = _currentSignals.Join(tempDataframe);
+
+            for (int i = 0; i < result.Rows.Count; i++)
+            {
+                var curr = Math.Abs(Convert.ToDouble(result["Value"][i]));
+                var max_curr = Convert.ToDouble(result["MaxValue"][i]);
+                const double baseI = 1000d;
+                var preLim = max_curr * 0.5;
+
+                var di = 0d;
+                if (curr > preLim)
+                {
+                    di = (curr - preLim) / baseI;
+                }
+
+                var gi = (max_curr - preLim) / baseI;
+
+                var currentCalc = Math.Pow(di / gi, 4d);
+                result[i, 2] = Math.Round(currentCalc, 5);
+
+            }
+            return result;
+        }
+
+        public double GetPerformanceIndex()
+        {
+            var voltage = this.GetVoltageIndex();
+            var power = this.GetPowerIndex();
+            var current = this.GetCurrentIndex();
+
+            var calcUpper = Convert.ToDouble(voltage["upper"].Sum());
+            var calcLower = Convert.ToDouble(voltage["lower"].Sum());
+            var calcPower = Convert.ToDouble(power["powerCalc"].Sum());
+            var calcCurrent = Convert.ToDouble(current["currentCalc"].Sum());
+            var result = calcUpper + calcLower + calcPower + calcCurrent;
+
+            return Math.Round(Math.Pow(result, 0.25d), 5);
         }
     }
 }

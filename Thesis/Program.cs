@@ -52,20 +52,20 @@ namespace ConsoleApp
 
                 var voltage2 = new SignalVoltage
                    ("someName",
-                   validDataValue[1].Value.AnalogValue,
+                   validDataValue[0].Value.AnalogValue,
                    validDataMaxValue[1].Value.AnalogValue,
-                   validDataMinValue[1].Value.AnalogValue,
-                   validDataMinValue[1].Value.AnalogValue);
+                   validDataMinValue[2].Value.AnalogValue,
+                   validDataMinValue[3].Value.AnalogValue);
 
                 var power = new SignalPower
                     ("someName",
                     validDataValue[0].Value.AnalogValue,
-                    validDataMaxValue[0].Value.AnalogValue);
+                    validDataMaxValue[1].Value.AnalogValue);
 
                 var current = new SignalCurrent
                     ("someName",
                     validDataValue[0].Value.AnalogValue,
-                    validDataMaxValue[0].Value.AnalogValue);
+                    validDataMaxValue[1].Value.AnalogValue);
                 //Создадим массивы данных, для их преобразования
                 var signalVoltageArr = new SignalVoltage[] { voltage, voltage2 };
                 var signalPower = new SignalPower[] { power };
@@ -91,8 +91,13 @@ namespace ConsoleApp
 
                 var calcul = new Calculation(powerData, currentData, voltageData);
 
+                Console.WriteLine(calcul.GetCurrentIndex());
+                Console.WriteLine(calcul.GetPowerIndex());
+                Console.WriteLine(calcul.GetVoltageIndex());
+
                 Console.WriteLine(calcul.GetPerformanceIndex());
-                
+
+
 
                 Console.ReadKey();
             }

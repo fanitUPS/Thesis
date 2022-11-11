@@ -87,17 +87,19 @@ namespace ModelThesis
                     ("Параметра, переданного в PreparingBranchData не существует.");
             }
 
-            var valueColumn = new Pd.PrimitiveDataFrameColumn<double>
-                ("Value", this.VoltageSignals.Length);
-            var maxValueColumn = new Pd.PrimitiveDataFrameColumn<double>
-                ("MaxValue", this.VoltageSignals.Length);
-
-            var result = new Pd.DataFrame
-                (valueColumn, maxValueColumn);
+            var result = new Pd.DataFrame();
 
             switch (name)
             {
                 case nameof(CurrentSignals):
+                    var valueColumn = new Pd.PrimitiveDataFrameColumn<double>
+                        ("Value", this.CurrentSignals.Length);
+                    var maxValueColumn = new Pd.PrimitiveDataFrameColumn<double>
+                        ("MaxValue", this.CurrentSignals.Length);
+
+                    result = new Pd.DataFrame
+                        (valueColumn, maxValueColumn);
+
                     for (int i = 0; i < CurrentSignals.Length; i++)
                     {
                         result[i, 0] = CurrentSignals[i].SignalValue;
@@ -106,6 +108,14 @@ namespace ModelThesis
                     break;
 
                 case nameof(PowerSignals):
+                    var valueColumnP = new Pd.PrimitiveDataFrameColumn<double>
+                        ("Value", this.PowerSignals.Length);
+                    var maxValueColumnP = new Pd.PrimitiveDataFrameColumn<double>
+                        ("MaxValue", this.PowerSignals.Length);
+
+                    result = new Pd.DataFrame
+                        (valueColumnP, maxValueColumnP);
+
                     for (int i = 0; i < PowerSignals.Length; i++)
                     {
                         result[i, 0] = PowerSignals[i].SignalValue;
