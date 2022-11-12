@@ -3,6 +3,7 @@ using ModelThesis;
 using System.Collections.Generic;
 using PandasNet;
 using Pd = Microsoft.Data.Analysis;
+using System.Data.SqlClient;
 
 namespace ConsoleApp
 {
@@ -30,76 +31,92 @@ namespace ConsoleApp
 
             try
             {
-                //Запрос данных, ответ приходит в виде массива данных
-                var dataValue = dataRequest.GetSignals(uidsArray);
-                var validationValue = new Validation(dataValue);
-                var validDataValue = validationValue.GetValidData();
-                //Запрос данных, ответ приходит в виде массива данных
-                var dataMaxValue = dataRequest.GetSignals(uidsArray);
-                var validationMaxValue = new Validation(dataMaxValue);
-                var validDataMaxValue = validationMaxValue.GetValidData();
-                //Запрос данных, ответ приходит в виде массива данных
-                var dataMinValue = dataRequest.GetSignals(uidsArray);
-                var validationMinValue = new Validation(dataMinValue);
-                var validDataMinValue = validationMinValue.GetValidData();
-                //Парсим данные, полученные из Системы
-                var voltage = new SignalVoltage
-                    ("someName",
-                    validDataValue[0].Value.AnalogValue,
-                    validDataMaxValue[1].Value.AnalogValue,
-                    validDataMinValue[2].Value.AnalogValue,
-                    validDataMinValue[3].Value.AnalogValue);
+                ////Запрос данных, ответ приходит в виде массива данных
+                //var dataValue = dataRequest.GetSignals(uidsArray);
+                //var validationValue = new Validation(dataValue);
+                //var validDataValue = validationValue.GetValidData();
+                ////Запрос данных, ответ приходит в виде массива данных
+                //var dataMaxValue = dataRequest.GetSignals(uidsArray);
+                //var validationMaxValue = new Validation(dataMaxValue);
+                //var validDataMaxValue = validationMaxValue.GetValidData();
+                ////Запрос данных, ответ приходит в виде массива данных
+                //var dataMinValue = dataRequest.GetSignals(uidsArray);
+                //var validationMinValue = new Validation(dataMinValue);
+                //var validDataMinValue = validationMinValue.GetValidData();
+                ////Парсим данные, полученные из Системы
+                //var voltage = new SignalVoltage
+                //    ("U1",
+                //    validDataValue[0].Value.AnalogValue,
+                //    validDataMaxValue[1].Value.AnalogValue,
+                //    validDataMinValue[2].Value.AnalogValue,
+                //    validDataMinValue[3].Value.AnalogValue);
 
-                var voltage2 = new SignalVoltage
-                   ("someName",
-                   validDataValue[0].Value.AnalogValue,
-                   validDataMaxValue[1].Value.AnalogValue,
-                   validDataMinValue[2].Value.AnalogValue,
-                   validDataMinValue[3].Value.AnalogValue);
+                //var voltage2 = new SignalVoltage
+                //   ("U2",
+                //   validDataValue[0].Value.AnalogValue,
+                //   validDataMaxValue[1].Value.AnalogValue,
+                //   validDataMinValue[2].Value.AnalogValue,
+                //   validDataMinValue[3].Value.AnalogValue);
 
-                var power = new SignalPower
-                    ("someName",
-                    validDataValue[0].Value.AnalogValue,
-                    validDataMaxValue[1].Value.AnalogValue);
+                //var power = new SignalPower
+                //    ("P",
+                //    validDataValue[0].Value.AnalogValue,
+                //    validDataMaxValue[1].Value.AnalogValue);
 
-                var current = new SignalCurrent
-                    ("someName",
-                    validDataValue[0].Value.AnalogValue,
-                    validDataMaxValue[1].Value.AnalogValue);
-                //Создадим массивы данных, для их преобразования
-                var signalVoltageArr = new SignalVoltage[] { voltage, voltage2 };
-                var signalPower = new SignalPower[] { power };
-                var signalCurrent = new SignalCurrent[] { current };
-                //Преобразуем данные для расчета
-                var preparingData = new PreparingData
-                    (signalPower,
-                    signalVoltageArr,
-                    signalCurrent);
+                //var current = new SignalCurrent
+                //    ("I",
+                //    validDataValue[0].Value.AnalogValue,
+                //    validDataMaxValue[1].Value.AnalogValue);
+                ////Создадим массивы данных, для их преобразования
+                //var signalVoltageArr = new SignalVoltage[] { voltage, voltage2 };
+                //var signalPower = new SignalPower[] { power };
+                //var signalCurrent = new SignalCurrent[] { current };
+                ////Преобразуем данные для расчета
+                //var preparingData = new PreparingData
+                //    (signalPower,
+                //    signalVoltageArr,
+                //    signalCurrent);
 
-                var currentData =
-                    preparingData.PreparingBranchData
-                    (nameof(preparingData.CurrentSignals));
-                Console.WriteLine(currentData);
+                //var currentData =
+                //    preparingData.PreparingBranchData
+                //    (nameof(preparingData.CurrentSignals));
+                //Console.WriteLine(currentData);
 
-                var powerData =
-                    preparingData.PreparingBranchData
-                    (nameof(preparingData.PowerSignals));
-                Console.WriteLine(powerData);
+                //var powerData =
+                //    preparingData.PreparingBranchData
+                //    (nameof(preparingData.PowerSignals));
+                //Console.WriteLine(powerData);
 
-                var voltageData = preparingData.PreparingNodeData();
-                Console.WriteLine(voltageData);
+                //var voltageData = preparingData.PreparingNodeData();
+                //Console.WriteLine(voltageData);
 
-                var calcul = new Calculation(powerData, currentData, voltageData);
+                //var calcul = new Calculation(powerData, currentData, voltageData);
 
-                Console.WriteLine(calcul.GetCurrentIndex());
-                Console.WriteLine(calcul.GetPowerIndex());
-                Console.WriteLine(calcul.GetVoltageIndex());
+                //Console.WriteLine(calcul.GetCurrentIndex());
+                //Console.WriteLine(calcul.GetPowerIndex());
+                //Console.WriteLine(calcul.GetVoltageIndex());
 
-                Console.WriteLine(calcul.GetPerformanceIndex());
+                //Console.WriteLine(calcul.GetPerformanceIndex());
 
+                var connectionString = "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
+                SqlConnection cnn;
 
-
+                cnn = new SqlConnection(connectionString);
+                cnn.Open();
+                var sql = "select * from Currents";
+                var command = new SqlCommand(sql, cnn);
+                var dataReader = command.ExecuteReader();
+                var result = "";
+                while (dataReader.Read())
+                {
+                    result = result + dataReader.GetValue(0) + "\n" + dataReader.GetValue(1) + "\n" + dataReader.GetValue(2) + "\n";
+                }
+                cnn.Close();
+                Console.WriteLine(result);
                 Console.ReadKey();
+
+
+
             }
             catch (Exception e)
             {

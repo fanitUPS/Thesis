@@ -97,8 +97,8 @@ namespace ModelThesis
 
                 var upper = Math.Pow(du / gu, 4d);
                 var lower = Math.Pow(dl / gl, 4d);
-                result[i, 4] = Math.Round(upper, 5);
-                result[i, 5] = Math.Round(lower, 5);
+                result[i, 5] = Math.Round(upper, 5);
+                result[i, 6] = Math.Round(lower, 5);
             }
             return result;
         }
@@ -128,7 +128,7 @@ namespace ModelThesis
                 var gp = (mpf - preLim) / baseP;
 
                 var powerCalc = Math.Pow(dp / gp, 4d);
-                result[i, 2] = Math.Round(powerCalc, 5);
+                result[i, 3] = Math.Round(powerCalc, 5);
 
             }
             return result;
@@ -159,7 +159,7 @@ namespace ModelThesis
                 var gi = (max_curr - preLim) / baseI;
 
                 var currentCalc = Math.Pow(di / gi, 4d);
-                result[i, 2] = Math.Round(currentCalc, 5);
+                result[i, 3] = Math.Round(currentCalc, 5);
 
             }
             return result;

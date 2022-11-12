@@ -53,9 +53,11 @@ namespace ModelThesis
                 ("MinVoltage", this.VoltageSignals.Length);
             var nomValueColumn = new Pd.PrimitiveDataFrameColumn<double>
                 ("NomVoltage", this.VoltageSignals.Length);
+            var nameColumn = new Pd.StringDataFrameColumn
+                ("Name", this.VoltageSignals.Length);
 
             var result = new Pd.DataFrame
-                (valueColumn, maxValueColumn, minValueColumn, nomValueColumn);
+                (valueColumn, maxValueColumn, minValueColumn, nomValueColumn, nameColumn);
 
             for (int i = 0; i < VoltageSignals.Length; i++)
             {
@@ -63,6 +65,7 @@ namespace ModelThesis
                 result[i, 1] = VoltageSignals[i].MaxVoltage;
                 result[i, 2] = VoltageSignals[i].MinVoltage;
                 result[i, 3] = VoltageSignals[i].NomVoltage;
+                result[i, 4] = VoltageSignals[i].SignalName;
             }
 
             return result;
@@ -96,14 +99,17 @@ namespace ModelThesis
                         ("Value", this.CurrentSignals.Length);
                     var maxValueColumn = new Pd.PrimitiveDataFrameColumn<double>
                         ("MaxValue", this.CurrentSignals.Length);
+                    var nameColumn = new Pd.StringDataFrameColumn
+                        ("Name", this.CurrentSignals.Length);
 
                     result = new Pd.DataFrame
-                        (valueColumn, maxValueColumn);
+                        (valueColumn, maxValueColumn, nameColumn);
 
                     for (int i = 0; i < CurrentSignals.Length; i++)
                     {
                         result[i, 0] = CurrentSignals[i].SignalValue;
                         result[i, 1] = CurrentSignals[i].MaxCurrent;
+                        result[i, 2] = CurrentSignals[i].SignalName;
                     }
                     break;
 
@@ -112,14 +118,17 @@ namespace ModelThesis
                         ("Value", this.PowerSignals.Length);
                     var maxValueColumnP = new Pd.PrimitiveDataFrameColumn<double>
                         ("MaxValue", this.PowerSignals.Length);
+                    var nameColumnP = new Pd.StringDataFrameColumn
+                        ("Name", this.PowerSignals.Length);
 
                     result = new Pd.DataFrame
-                        (valueColumnP, maxValueColumnP);
+                        (valueColumnP, maxValueColumnP, nameColumnP);
 
                     for (int i = 0; i < PowerSignals.Length; i++)
                     {
                         result[i, 0] = PowerSignals[i].SignalValue;
                         result[i, 1] = PowerSignals[i].MaxPower;
+                        result[i, 2] = PowerSignals[i].SignalName;
                     }
                     break;
             };
