@@ -52,11 +52,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculation.cs" />
+    <Compile Include="DataBase.cs" />
+    <Compile Include="DataResponse.cs" />
     <Compile Include="PreparingData.cs" />
     <Compile Include="SignalBase.cs" />
     <Compile Include="SignalCurrent.cs" />
     <Compile Include="SignalPower.cs" />
     <Compile Include="SignalVoltage.cs" />
+    <Compile Include="SynchronizeModel.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="DataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
