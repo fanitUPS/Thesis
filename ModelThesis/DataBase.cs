@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace ModelThesis
 {
-    class DataBase
+    public class DataBase
     {
+        private string _connectionString;
+
+        public string 
     }
 }
