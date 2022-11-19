@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Calculation.cs" />
     <Compile Include="DataBase.cs" />
+    <Compile Include="DataBaseTables.cs" />
     <Compile Include="DataResponse.cs" />
     <Compile Include="PreparingData.cs" />
     <Compile Include="SignalBase.cs" />

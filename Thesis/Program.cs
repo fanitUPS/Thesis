@@ -99,19 +99,7 @@ namespace ConsoleApp
                 //Console.WriteLine(calcul.GetPerformanceIndex());
 
                 var connectionString = "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
-                SqlConnection cnn;
-
-                cnn = new SqlConnection(connectionString);
-                cnn.Open();
-                var sql = "select * from Currents";
-                var command = new SqlCommand(sql, cnn);
-                var dataReader = command.ExecuteReader();
-                var result = "";
-                while (dataReader.Read())
-                {
-                    result = result + dataReader.GetValue(0) + "\n" + dataReader.GetValue(1) + "\n" + dataReader.GetValue(2) + "\n";
-                }
-                cnn.Close();
+                
                 Console.WriteLine(result);
                 Console.ReadKey();
 
