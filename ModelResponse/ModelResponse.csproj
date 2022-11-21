@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FC6F1DE1-3370-4912-A4DD-11812B055A8D}</ProjectGuid>
+    <ProjectGuid>{867E5644-4890-4619-9BD1-610D15B34068}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ModelThesis</RootNamespace>
-    <AssemblyName>ModelThesis</AssemblyName>
+    <RootNamespace>ModelResponse</RootNamespace>
+    <AssemblyName>ModelResponse</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -30,6 +30,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
@@ -49,16 +67,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Data.Analysis">
-      <HintPath>..\packages\Microsoft.Data.Analysis.0.20.0\lib\netstandard2.0\Microsoft.Data.Analysis.dll</HintPath>
-    </Reference>
-    <Reference Include="Monitel.Rtdb.Api, Version=3.0.7082.28397, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thesis\bin\Debug\Monitel.Rtdb.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="Pandas.NET">
-      <HintPath>..\packages\Pandas.NET.0.3.0\lib\netstandard2.0\Pandas.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -69,18 +77,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Calculation.cs" />
-    <Compile Include="DataBase.cs" />
-    <Compile Include="DataBaseTables.cs" />
-    <Compile Include="PreparingData.cs" />
-    <Compile Include="SignalBase.cs" />
-    <Compile Include="SignalCurrent.cs" />
-    <Compile Include="SignalPower.cs" />
-    <Compile Include="SignalVoltage.cs" />
-    <Compile Include="SynchronizeModel.cs" />
-    <Compile Include="Verification.cs" />
-    <Compile Include="DataRequest.cs" />
+    <Compile Include="DataResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib60870\lib60870.csproj">
+      <Project>{f604286a-1afc-4355-8c2c-a998cfcee979}</Project>
+      <Name>lib60870</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,6 +12,18 @@ namespace ModelThesis
 
         private Pd.DataFrame _voltageSignals;
 
+        private Pd.DataFrame _currentIndex;
+
+        private Pd.DataFrame _powerIndex;
+
+        private Pd.DataFrame _voltageIndex;
+        public Pd.DataFrame CurrentIndex { get => _currentIndex; }
+
+        public Pd.DataFrame PowerIndex { get => _powerIndex; }
+
+        public Pd.DataFrame VoltagetIndex { get => _voltageIndex; }
+
+
         public Pd.DataFrame PowerSignals
         {
             get => _powerSignals;
@@ -71,8 +83,8 @@ namespace ModelThesis
                         ("Номинальное напряжение равно 0.");
                 }
 
-                var fu = vu * 0.95d;
-                var fl = vl * 1.05d;
+                var fu = vu * 0.98d;
+                var fl = vl * 1.06d;
 
                 var du = 0d;
                 if (vras > fu)
@@ -100,6 +112,7 @@ namespace ModelThesis
                 result[i, 5] = Math.Round(upper, 5);
                 result[i, 6] = Math.Round(lower, 5);
             }
+
             return result;
         }
 
@@ -117,7 +130,7 @@ namespace ModelThesis
                 var p = Math.Abs(Convert.ToDouble(result["Value"][i]));
                 var mpf = Convert.ToDouble(result["MaxValue"][i]);
                 const double baseP = 1000d;
-                var preLim = mpf * 0.5;
+                var preLim = mpf * 0.9;
 
                 var dp = 0d;
                 if (p > preLim)
@@ -131,6 +144,7 @@ namespace ModelThesis
                 result[i, 3] = Math.Round(powerCalc, 5);
 
             }
+
             return result;
         }
 
@@ -148,7 +162,7 @@ namespace ModelThesis
                 var curr = Math.Abs(Convert.ToDouble(result["Value"][i]));
                 var max_curr = Convert.ToDouble(result["MaxValue"][i]);
                 const double baseI = 1000d;
-                var preLim = max_curr * 0.5;
+                var preLim = max_curr * 0.9;
 
                 var di = 0d;
                 if (curr > preLim)
@@ -162,14 +176,18 @@ namespace ModelThesis
                 result[i, 3] = Math.Round(currentCalc, 5);
 
             }
+ 
             return result;
         }
 
         public double GetPerformanceIndex()
-        {
+        {        
             var voltage = this.GetVoltageIndex();
             var power = this.GetPowerIndex();
             var current = this.GetCurrentIndex();
+            _powerIndex = power;
+            _currentIndex = current;
+            _voltageIndex = voltage;
 
             var calcUpper = Convert.ToDouble(voltage["upper"].Sum());
             var calcLower = Convert.ToDouble(voltage["lower"].Sum());
@@ -177,6 +195,7 @@ namespace ModelThesis
             var calcCurrent = Convert.ToDouble(current["currentCalc"].Sum());
             var result = calcUpper + calcLower + calcPower + calcCurrent;
 
+            
             return Math.Round(Math.Pow(result, 0.25d), 5);
         }
     }

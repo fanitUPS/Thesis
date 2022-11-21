@@ -1,9 +1,8 @@
 ﻿using System;
 using ModelThesis;
 using System.Collections.Generic;
-using PandasNet;
-using Pd = Microsoft.Data.Analysis;
-using System.Data.SqlClient;
+using lib60870;
+using ModelResponse;
 
 namespace ConsoleApp
 {
@@ -17,110 +16,114 @@ namespace ConsoleApp
         /// </summary>
         private const string _connectionStringToRtdb = "10.221.3.29:900";
 
+        private const string _connectionStringToDb = "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
+
+        private const string _serverAddress = "10.221.3.9";
+
+        private const int _serverPort = 2404;
+
+        private const int _coa = 77;
+
+        private const int _ioa = 999;
+
         static void Main(string[] args)
         {
-            //Гуиды созданных в системе телеизмерений
-            var signalGuid1 = new Guid("65CCCE53-5914-49E7-9623-BB914962C46A");
-            var signalGuid2 = new Guid("7443900b-9a2a-436d-a284-cc9400bb75dd");
-            var signalGuid3 = new Guid("CC2FD1EB-C5CD-4FC5-8E6E-8D5E368985B3");
-            var signalGuid4 = new Guid("C47538AB-7CBE-4D91-851B-83571B4A461F");
-            //Запрос данных осуществляется через массив гуидов
-            var uidsArray = new Guid[] { signalGuid1, signalGuid2, signalGuid3, signalGuid4 };
+            var server = new Server();
             //Создаем экземпляр класса, для запроса данных
             var dataRequest = new DataRequest(_connectionStringToRtdb);
-
+            
             try
             {
-                ////Запрос данных, ответ приходит в виде массива данных
-                //var dataValue = dataRequest.GetSignals(uidsArray);
-                //var validationValue = new Validation(dataValue);
-                //var validDataValue = validationValue.GetValidData();
-                ////Запрос данных, ответ приходит в виде массива данных
-                //var dataMaxValue = dataRequest.GetSignals(uidsArray);
-                //var validationMaxValue = new Validation(dataMaxValue);
-                //var validDataMaxValue = validationMaxValue.GetValidData();
-                ////Запрос данных, ответ приходит в виде массива данных
-                //var dataMinValue = dataRequest.GetSignals(uidsArray);
-                //var validationMinValue = new Validation(dataMinValue);
-                //var validDataMinValue = validationMinValue.GetValidData();
-                ////Парсим данные, полученные из Системы
-                //var voltage = new SignalVoltage
-                //    ("U1",
-                //    validDataValue[0].Value.AnalogValue,
-                //    validDataMaxValue[1].Value.AnalogValue,
-                //    validDataMinValue[2].Value.AnalogValue,
-                //    validDataMinValue[3].Value.AnalogValue);
+                var starTime = DateTime.Now;
+                Console.WriteLine(starTime);
 
-                //var voltage2 = new SignalVoltage
-                //   ("U2",
-                //   validDataValue[0].Value.AnalogValue,
-                //   validDataMaxValue[1].Value.AnalogValue,
-                //   validDataMinValue[2].Value.AnalogValue,
-                //   validDataMinValue[3].Value.AnalogValue);
-
-                //var power = new SignalPower
-                //    ("P",
-                //    validDataValue[0].Value.AnalogValue,
-                //    validDataMaxValue[1].Value.AnalogValue);
-
-                //var current = new SignalCurrent
-                //    ("I",
-                //    validDataValue[0].Value.AnalogValue,
-                //    validDataMaxValue[1].Value.AnalogValue);
-                ////Создадим массивы данных, для их преобразования
-                //var signalVoltageArr = new SignalVoltage[] { voltage, voltage2 };
-                //var signalPower = new SignalPower[] { power };
-                //var signalCurrent = new SignalCurrent[] { current };
-                ////Преобразуем данные для расчета
-                //var preparingData = new PreparingData
-                //    (signalPower,
-                //    signalVoltageArr,
-                //    signalCurrent);
-
-                //var currentData =
-                //    preparingData.PreparingBranchData
-                //    (nameof(preparingData.CurrentSignals));
-                //Console.WriteLine(currentData);
-
-                //var powerData =
-                //    preparingData.PreparingBranchData
-                //    (nameof(preparingData.PowerSignals));
-                //Console.WriteLine(powerData);
-
-                //var voltageData = preparingData.PreparingNodeData();
-                //Console.WriteLine(voltageData);
-
-                //var calcul = new Calculation(powerData, currentData, voltageData);
-
-                //Console.WriteLine(calcul.GetCurrentIndex());
-                //Console.WriteLine(calcul.GetPowerIndex());
-                //Console.WriteLine(calcul.GetVoltageIndex());
-
-                //Console.WriteLine(calcul.GetPerformanceIndex());
-
-                var connectionString = "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
+                var dataBase = new DataBase(_connectionStringToDb);
+                var dataCurrent = dataBase.SelectData(nameof(DataBaseTables.Currents));
+                var dataPower = dataBase.SelectData(nameof(DataBaseTables.Powers));
+                var dataVoltage = dataBase.SelectData(nameof(DataBaseTables.Voltages));
                 
-                Console.WriteLine(result);
+                var voltageList = new List<SignalVoltage>();
+                var currentList = new List<SignalCurrent>();
+                var powerList = new List<SignalPower>();
+
+                var time = DateTime.Now;
+
+                foreach(var value in dataVoltage)
+                {
+                    var tempData = new Verification(dataRequest.GetSignals(value.Value));
+                    var data = tempData.GetValidData();
+                    voltageList.Add(new SignalVoltage(value.Key,
+                        data[0].Value.AnalogValue,
+                        data[1].Value.AnalogValue,
+                        data[2].Value.AnalogValue,
+                        data[3].Value.AnalogValue));
+
+                    if (data[0].Time < time)
+                    {
+                        time = Convert.ToDateTime(data[0].Time);
+                    }
+                }
+                
+                foreach (var value in dataCurrent)
+                {
+                    var tempData = new Verification(dataRequest.GetSignals(value.Value));
+                    var data = tempData.GetValidData();
+                    currentList.Add(new SignalCurrent(value.Key,
+                        data[0].Value.AnalogValue,
+                        data[1].Value.AnalogValue));
+
+                    if (data[0].Time < time)
+                    {
+                        time = Convert.ToDateTime(data[0].Time);
+                    }
+                }
+
+                foreach (var value in dataPower)
+                {
+                    var tempData = new Verification(dataRequest.GetSignals(value.Value));
+                    var data = tempData.GetValidData();
+                    powerList.Add(new SignalPower(value.Key,
+                        data[0].Value.AnalogValue,
+                        data[1].Value.AnalogValue));
+
+                    if (data[0].Time < time)
+                    {
+                        time = Convert.ToDateTime(data[0].Time);
+                    }
+                }
+
+                var preparingData = new PreparingData(
+                    powerList.ToArray(), 
+                    voltageList.ToArray(), 
+                    currentList.ToArray());
+
+                var voltages = preparingData.PreparingNodeData();
+                var currents = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
+                var powers = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
+
+                var calc = new Calculation(powers, currents, voltages);
+
+                var valueIndex = calc.GetPerformanceIndex();
+                Console.WriteLine(valueIndex);
+                Console.WriteLine(calc.CurrentIndex);
+                Console.WriteLine(calc.VoltagetIndex);
+                Console.WriteLine(calc.PowerIndex);
+
+                
+                var stopTime = DateTime.Now;
+                Console.WriteLine((stopTime - starTime).TotalSeconds);
+                Console.WriteLine(5 > (stopTime - starTime).TotalSeconds);
+                Console.WriteLine(time);
+
+                var send = new ModelResponse.DataResponse(_serverAddress, _serverPort, time, valueIndex, _coa, _ioa);
+                send.SendPerformanceIndex();
                 Console.ReadKey();
-
-
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.ReadKey();
             }
-
-            //foreach (Ck.RtdbValue value in validSignals)
-            //{
-            //    Console.WriteLine("Value: " + value.Value.AnalogValue);
-            //    Console.WriteLine("Type: " + value.Type);
-            //    Console.WriteLine("Uid: " + value.Uid);
-            //    Console.WriteLine("QualityCodes: " + Convert.ToString(value.QualityCodes, 16));
-            //    Console.WriteLine("Time: " + value.Time);
-            //}
-            //Console.ReadKey();
         }
     }
 }

@@ -9,8 +9,6 @@ namespace ModelThesis
 {
     public class DataBase
     {
-        private string _connectionString;
-
         public string ConnectionString { get; set; }
 
         public DataBase(string connectionString)
@@ -18,24 +16,25 @@ namespace ModelThesis
             ConnectionString = connectionString;
         }
 
-        public string[] SelectData(DataBaseTables tableName)
+        public Dictionary<string, Guid[]> SelectData(string tableName)
         {
-            var cnn = new SqlConnection(_connectionString);
+            var cnn = new SqlConnection(this.ConnectionString);
             cnn.Open();
-            var nameTable = nameof(tableName);
-            var sql = String.Format("select * from {0}", nameTable);
+            var sql = String.Format("select * from {0}", tableName);
             var command = new SqlCommand(sql, cnn);
             var dataReader = command.ExecuteReader();
-            var result = new List<string>();
+            var result = new Dictionary<string, Guid[]>();
             while (dataReader.Read())
             {
-                for (int i = 0; i < dataReader.FieldCount; i++)
+                var tempList = new List<Guid>();
+                for (int i = 2; i < dataReader.FieldCount; i++)
                 {
-                    result.Add(dataReader.GetString(i));
+                    tempList.Add(new Guid(dataReader.GetString(i)));
                 }
+                result[dataReader.GetString(1)] = tempList.ToArray();
             }
             cnn.Close();
-            return result.ToArray();
+            return result;
         }
     }
 }

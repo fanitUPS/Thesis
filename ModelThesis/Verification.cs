@@ -7,7 +7,7 @@ namespace ModelThesis
     /// <summary>
     /// Класс для валидации данных из СК-11
     /// </summary>
-    public class Validation
+    public class Verification
     {
         /// <summary>
         /// Достоверный код качества ТИ
@@ -50,7 +50,7 @@ namespace ModelThesis
         /// Конструктор класса
         /// </summary>
         /// <param name="inputData">Входные данные для проверки</param>
-        public Validation(Ck.RtdbValue[] inputData)
+        public Verification(Ck.RtdbValue[] inputData)
         {
             InputData = inputData;
         }
