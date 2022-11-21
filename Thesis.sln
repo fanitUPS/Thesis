@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32929.386
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thesis", "Thesis\Thesis.csproj", "{1CEE95C0-E6ED-4598-802D-DD1AAE308943}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelThesis", "ModelThesis\ModelThesis.csproj", "{FC6F1DE1-3370-4912-A4DD-11812B055A8D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelResponse", "ModelResponse\ModelResponse.csproj", "{867E5644-4890-4619-9BD1-610D15B34068}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib60870", "lib60870\lib60870.csproj", "{F604286A-1AFC-4355-8C2C-A998CFCEE979}"
 EndProject
@@ -54,21 +52,6 @@ Global
 		{FC6F1DE1-3370-4912-A4DD-11812B055A8D}.Release|x64.Build.0 = Release|Any CPU
 		{FC6F1DE1-3370-4912-A4DD-11812B055A8D}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC6F1DE1-3370-4912-A4DD-11812B055A8D}.Release|x86.Build.0 = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|an.ActiveCfg = Debug|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|an.Build.0 = Debug|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|Any CPU.Build.0 = Debug|x64
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|x64.ActiveCfg = Debug|x86
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Debug|x86.Build.0 = Debug|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|an.ActiveCfg = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|an.Build.0 = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|Any CPU.Build.0 = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|x64.ActiveCfg = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|x64.Build.0 = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|x86.ActiveCfg = Release|Any CPU
-		{867E5644-4890-4619-9BD1-610D15B34068}.Release|x86.Build.0 = Release|Any CPU
 		{F604286A-1AFC-4355-8C2C-A998CFCEE979}.Debug|an.ActiveCfg = Debug|Any CPU
 		{F604286A-1AFC-4355-8C2C-A998CFCEE979}.Debug|an.Build.0 = Debug|Any CPU
 		{F604286A-1AFC-4355-8C2C-A998CFCEE979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

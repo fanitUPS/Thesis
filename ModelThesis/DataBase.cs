@@ -7,15 +7,30 @@ using System.Data.SqlClient;
 
 namespace ModelThesis
 {
+    /// <summary>
+    /// Класс работы с БД
+    /// </summary>
     public class DataBase
     {
+        /// <summary>
+        /// Строка подключения к БД
+        /// </summary>
         public string ConnectionString { get; set; }
 
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="connectionString">Строка подключения к БД</param>
         public DataBase(string connectionString)
         {
             ConnectionString = connectionString;
         }
 
+        /// <summary>
+        /// Метод запроса данных из БД
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         public Dictionary<string, Guid[]> SelectData(string tableName)
         {
             var cnn = new SqlConnection(this.ConnectionString);

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ModelThesis
 {
+    /// <summary>
+    /// Перечисление таблиц в БД
+    /// </summary>
     public enum DataBaseTables
     {
         Currents,

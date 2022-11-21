@@ -72,6 +72,7 @@
     <Compile Include="Calculation.cs" />
     <Compile Include="DataBase.cs" />
     <Compile Include="DataBaseTables.cs" />
+    <Compile Include="DataResponse.cs" />
     <Compile Include="PreparingData.cs" />
     <Compile Include="SignalBase.cs" />
     <Compile Include="SignalCurrent.cs" />
@@ -81,6 +82,12 @@
     <Compile Include="Verification.cs" />
     <Compile Include="DataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib60870\lib60870.csproj">
+      <Project>{f604286a-1afc-4355-8c2c-a998cfcee979}</Project>
+      <Name>lib60870</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

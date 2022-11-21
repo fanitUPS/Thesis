@@ -272,10 +272,6 @@
       <Project>{f604286a-1afc-4355-8c2c-a998cfcee979}</Project>
       <Name>lib60870</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ModelResponse\ModelResponse.csproj">
-      <Project>{867e5644-4890-4619-9bd1-610d15b34068}</Project>
-      <Name>ModelResponse</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ModelThesis\ModelThesis.csproj">
       <Project>{fc6f1de1-3370-4912-a4dd-11812b055a8d}</Project>
       <Name>ModelThesis</Name>

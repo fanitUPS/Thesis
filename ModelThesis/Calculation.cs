@@ -3,45 +3,90 @@ using System.Collections.Generic;
 using Pd = Microsoft.Data.Analysis;
 
 namespace ModelThesis
-{
+{ 
+    /// <summary>
+    /// Класс расчета показателей тяжести
+    /// </summary>
     public class Calculation
     {
+        /// <summary>
+        /// Датафрейм с данными по мощности
+        /// </summary>
         private Pd.DataFrame _powerSignals;
 
+        /// <summary>
+        /// Датафрейм с данными по току
+        /// </summary>
         private Pd.DataFrame _currentSignals;
 
+        /// <summary>
+        /// Датафрейм с данными по напряжению
+        /// </summary>
         private Pd.DataFrame _voltageSignals;
 
+        /// <summary>
+        /// Показатели тяжести по току
+        /// </summary>
         private Pd.DataFrame _currentIndex;
 
+        /// <summary>
+        /// Показатели тяжести по мощности
+        /// </summary>
         private Pd.DataFrame _powerIndex;
 
+        /// <summary>
+        /// Показатели тяжести по напряжению
+        /// </summary>
         private Pd.DataFrame _voltageIndex;
+
+        /// <summary>
+        /// Показатели тяжести по току
+        /// </summary>
         public Pd.DataFrame CurrentIndex { get => _currentIndex; }
 
+        /// <summary>
+        /// Показатели тяжести по мощности
+        /// </summary>
         public Pd.DataFrame PowerIndex { get => _powerIndex; }
 
+        /// <summary>
+        /// Показатели тяжести по напряжению
+        /// </summary>
         public Pd.DataFrame VoltagetIndex { get => _voltageIndex; }
 
-
+        /// <summary>
+        /// Датафрейм с данными по мощности
+        /// </summary>
         public Pd.DataFrame PowerSignals
         {
             get => _powerSignals;
             set => _powerSignals = EmptyCheck(value);
         }
 
+        /// <summary>
+        /// Датафрейм с данными по току
+        /// </summary>
         public Pd.DataFrame CurrentSignals
         {
             get => _currentSignals;
             set => _currentSignals = EmptyCheck(value);
         }
 
+        /// <summary>
+        /// Датафрейм с данными по напряжению
+        /// </summary>
         public Pd.DataFrame VoltageSignals
         {
             get => _voltageSignals;
             set => _voltageSignals = EmptyCheck(value);
         }
 
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="powerSignals">Датафрейм с данными по мощности</param>
+        /// <param name="currentSignals">Датафрейм с данными по току</param>
+        /// <param name="voltageSignals">Датафрейм с данными по напряжению</param>
         public Calculation(Pd.DataFrame powerSignals,
             Pd.DataFrame currentSignals, Pd.DataFrame voltageSignals)
         {
@@ -50,6 +95,12 @@ namespace ModelThesis
             VoltageSignals = voltageSignals;
         }
 
+        /// <summary>
+        /// Метод проверки входных данных
+        /// </summary>
+        /// <param name="data">Входные данные</param>
+        /// <returns>Валидные данные</returns>
+        /// <exception cref="ArgumentException">Исключение</exception>
         private Pd.DataFrame EmptyCheck(Pd.DataFrame data)
         {
             if (data.Rows.Count == 0)
@@ -60,7 +111,12 @@ namespace ModelThesis
             return data;
         }
 
-        public Pd.DataFrame GetVoltageIndex()
+        /// <summary>
+        /// Метод расчета показателя тяжести по напряжениею
+        /// </summary>
+        /// <returns>Датафрейм с локальными показателями тяжести</returns>
+        /// <exception cref="ArgumentException">Исключение</exception>
+        private Pd.DataFrame GetVoltageIndex()
         {
             var upperClm = new Pd.PrimitiveDataFrameColumn<double>("upper");
             var lowerClm = new Pd.PrimitiveDataFrameColumn<double>("lower");
@@ -116,7 +172,11 @@ namespace ModelThesis
             return result;
         }
 
-        public Pd.DataFrame GetPowerIndex()
+        /// <summary>
+        /// Метод расчета показателя тяжести по мощности
+        /// </summary>
+        /// <returns>Локальные показатели тяжести</returns>
+        private Pd.DataFrame GetPowerIndex()
         {
             var powerCalcClm = new Pd.PrimitiveDataFrameColumn<double>("powerCalc");
 
@@ -148,7 +208,11 @@ namespace ModelThesis
             return result;
         }
 
-        public Pd.DataFrame GetCurrentIndex()
+        /// <summary>
+        /// Метод расчета показателей тяжести по току
+        /// </summary>
+        /// <returns>Локальные показатели тяжести</returns>
+        private Pd.DataFrame GetCurrentIndex()
         {
             var currentCalcClm = new Pd.PrimitiveDataFrameColumn<double>("currentCalc");
 
@@ -180,6 +244,10 @@ namespace ModelThesis
             return result;
         }
 
+        /// <summary>
+        /// Расчет системного показателя тяжести
+        /// </summary>
+        /// <returns>Системный показатель тяжести</returns>
         public double GetPerformanceIndex()
         {        
             var voltage = this.GetVoltageIndex();
