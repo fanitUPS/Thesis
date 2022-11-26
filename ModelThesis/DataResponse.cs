@@ -43,17 +43,16 @@ namespace ModelThesis
         /// </summary>
         /// <param name="serverAddress">IP адрес расчетного сервера</param>
         /// <param name="serverPort">Порт устройства МЭК 104 в СК-11(по умолчанию 2404)</param>
-        /// <param name="time">Метка времени</param>
-        /// <param name="value">Значение расчета</param>
+        /// <param name="index">Показатель тяжести</param>
         /// <param name="coa">Адрес slave в СК-11</param>
         /// <param name="ioa">Адрес ТИ в СК-11</param>
         public DataResponse(string serverAddress, 
-            int serverPort, DateTime time, double value, int coa, int ioa)
+            int serverPort, PerformanceIndex index, int coa, int ioa)
         {
             ServerIpAddress = serverAddress;
             ServerPort = serverPort;
-            DateTime = time;
-            Value = value;
+            DateTime = index.TimeStamp;
+            Value = index.Value;
             Coa = coa;
             Ioa = ioa;
         }

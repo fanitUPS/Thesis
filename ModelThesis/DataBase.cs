@@ -51,8 +51,15 @@ namespace ModelThesis
             return result;
         }
 
-        public void InsertData(string tableName, string data)
+        /// <summary>
+        /// Запись результата расчета в БД
+        /// </summary>
+        /// <param name="tableName">Имя таблицы, куда записывается результат</param>
+        /// <param name="data">Данные для записи</param>
+        public void InsertData(string tableName, PerformanceIndex index)
         {
+            var data = this.PreparingInsertCalcResult(index.Value, index.TimeStamp.ToString());
+            
             using (var cnn = new SqlConnection(this.ConnectionString))
             {
                 string sql = $"INSERT INTO {tableName} VALUES ({data})";
@@ -63,7 +70,13 @@ namespace ModelThesis
             }
         }
 
-        public string PreparingInsertCalcResult(double value, string time)
+        /// <summary>
+        /// Подготовка данных для записи
+        /// </summary>
+        /// <param name="value">Значение показателя</param>
+        /// <param name="time">Метка времени</param>
+        /// <returns>Подготовленные данные</returns>
+        private string PreparingInsertCalcResult(double value, string time)
         {
             var lastId = "0";
             var stringValue = "";
@@ -87,6 +100,10 @@ namespace ModelThesis
             return $"{id}, {stringValue}, '{time}'";
         }
 
+        /// <summary>
+        /// Получение последнего показателя тяжести
+        /// </summary>
+        /// <returns>Показатель тяжести</returns>
         private PerformanceIndex GetLastPerformanceIndex()
         {
             var id = "0";
@@ -111,18 +128,29 @@ namespace ModelThesis
             return new PerformanceIndex
                 (Convert.ToInt32(id), Convert.ToDouble(value), Convert.ToDateTime(timeStamp));
         }
-        
-        public double GetIncrementOfIndex(double value)
+
+        /// <summary>
+        /// Расчет приращения показателя тяжести
+        /// </summary>
+        /// <param name="index">Показатель тяжести</param>
+        /// <returns>Приращение показателя тяжести</returns>
+        public double GetIncrementOfIndex(PerformanceIndex index)
         {
             var preValue = this.GetLastPerformanceIndex();
 
-            return preValue.Value - value;
+            return preValue.Value - index.Value;
         }
 
-        public double GetRateOfChange(double value, DateTime time)
+        /// <summary>
+        /// Расчет скорости изменения показателя тяжести
+        /// </summary>
+        /// <param name="index">Показатель тяжести</param>
+        /// <returns>Скорость изменения показателя тяжести</returns>
+        /// <exception cref="ArgumentException">Исключение</exception>
+        public double GetRateOfChange(PerformanceIndex index)
         {
-            var increment = this.GetIncrementOfIndex(value);
-            var timeDiff = time.Subtract(this.GetLastPerformanceIndex().TimeStamp);
+            var increment = this.GetIncrementOfIndex(index.Value);
+            var timeDiff = index.TimeStamp.Subtract(this.GetLastPerformanceIndex().TimeStamp);
             if (timeDiff == TimeSpan.Zero)
             {
                 throw new ArgumentException("Одинаковове время двух последних расчетов");

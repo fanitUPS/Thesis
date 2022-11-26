@@ -15,14 +15,29 @@ namespace ConsoleApp
         /// </summary>
         private const string _connectionStringToRtdb = "10.221.3.29:900";
 
+        /// <summary>
+        /// Строка подключения к БД
+        /// </summary>
         private const string _connectionStringToDb = "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
 
+        /// <summary>
+        /// Адрес сервера передачи ТИ
+        /// </summary>
         private const string _serverAddress = "10.221.3.9";
 
+        /// <summary>
+        /// Порт для приняти ТИ
+        /// </summary>
         private const int _serverPort = 2404;
 
+        /// <summary>
+        /// Общий адрес ТИ
+        /// </summary>
         private const int _coa = 77;
 
+        /// <summary>
+        /// Адрес объекта информации
+        /// </summary>
         private const int _ioa = 999;
 
         static void Main(string[] args)
@@ -115,18 +130,13 @@ namespace ConsoleApp
                 Console.WriteLine(5 > (stopTime - starTime).TotalSeconds);
                 Console.WriteLine(index.TimeStamp);
 
-                var send = new DataResponse(_serverAddress, _serverPort, index.TimeStamp, index.Value, _coa, _ioa);
+                var send = new DataResponse(_serverAddress, _serverPort, index, _coa, _ioa);
                 send.SendPerformanceIndex();
 
-                var insertResult = dataBase.PreparingInsertCalcResult(valueIndex, time.ToString("yyyy-MM-dd HH:mm:ss"));
-                Console.WriteLine(insertResult);
-                Console.WriteLine(dataBase.GetRateOfChange(index.Value, index.TimeStamp));
-                Console.WriteLine(dataBase.GetIncrementOfIndex(index.Value));
+                Console.WriteLine(dataBase.GetRateOfChange(index));
+                Console.WriteLine(dataBase.GetIncrementOfIndex(index));
 
-
-                dataBase.InsertData(nameof(DataBaseTables.Calculations), insertResult);
-
-                
+                dataBase.InsertData(nameof(DataBaseTables.Calculations), index);
 
                 Console.ReadKey();
             }
