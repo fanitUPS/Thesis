@@ -37,17 +37,17 @@ namespace ConsoleApp
                 Console.WriteLine(starTime);
 
                 var dataBase = new DataBase(_connectionStringToDb);
-                var dataCurrent = dataBase.SelectData(nameof(DataBaseTables.Currents));
-                var dataPower = dataBase.SelectData(nameof(DataBaseTables.Powers));
-                var dataVoltage = dataBase.SelectData(nameof(DataBaseTables.Voltages));
-                
+                var dataCurrent = dataBase.SelectUuid(nameof(DataBaseTables.Currents));
+                var dataPower = dataBase.SelectUuid(nameof(DataBaseTables.Powers));
+                var dataVoltage = dataBase.SelectUuid(nameof(DataBaseTables.Voltages));
+
                 var voltageList = new List<SignalVoltage>();
                 var currentList = new List<SignalCurrent>();
                 var powerList = new List<SignalPower>();
 
                 var time = DateTime.Now;
 
-                foreach(var value in dataVoltage)
+                foreach (var value in dataVoltage)
                 {
                     var tempData = new Verification(dataRequest.GetSignals(value.Value));
                     var data = tempData.GetValidData();
@@ -62,7 +62,7 @@ namespace ConsoleApp
                         time = Convert.ToDateTime(data[0].Time);
                     }
                 }
-                
+
                 foreach (var value in dataCurrent)
                 {
                     var tempData = new Verification(dataRequest.GetSignals(value.Value));
@@ -92,8 +92,8 @@ namespace ConsoleApp
                 }
 
                 var preparingData = new PreparingData(
-                    powerList.ToArray(), 
-                    voltageList.ToArray(), 
+                    powerList.ToArray(),
+                    voltageList.ToArray(),
                     currentList.ToArray());
 
                 var voltages = preparingData.PreparingNodeData();
@@ -108,14 +108,26 @@ namespace ConsoleApp
                 Console.WriteLine(calc.VoltagetIndex);
                 Console.WriteLine(calc.PowerIndex);
 
-                
+                var index = new PerformanceIndex(0, valueIndex, time);
+
                 var stopTime = DateTime.Now;
                 Console.WriteLine((stopTime - starTime).TotalSeconds);
                 Console.WriteLine(5 > (stopTime - starTime).TotalSeconds);
-                Console.WriteLine(time);
+                Console.WriteLine(index.TimeStamp);
 
-                var send = new ModelResponse.DataResponse(_serverAddress, _serverPort, time, valueIndex, _coa, _ioa);
+                var send = new DataResponse(_serverAddress, _serverPort, index.TimeStamp, index.Value, _coa, _ioa);
                 send.SendPerformanceIndex();
+
+                var insertResult = dataBase.PreparingInsertCalcResult(valueIndex, time.ToString("yyyy-MM-dd HH:mm:ss"));
+                Console.WriteLine(insertResult);
+                Console.WriteLine(dataBase.GetRateOfChange(index.Value, index.TimeStamp));
+                Console.WriteLine(dataBase.GetIncrementOfIndex(index.Value));
+
+
+                dataBase.InsertData(nameof(DataBaseTables.Calculations), insertResult);
+
+                
+
                 Console.ReadKey();
             }
             catch (Exception e)

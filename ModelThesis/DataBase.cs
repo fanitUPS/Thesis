@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 
 namespace ModelThesis
@@ -31,25 +28,106 @@ namespace ModelThesis
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        public Dictionary<string, Guid[]> SelectData(string tableName)
+        public Dictionary<string, Guid[]> SelectUuid(string tableName)
         {
-            var cnn = new SqlConnection(this.ConnectionString);
-            cnn.Open();
-            var sql = String.Format("select * from {0}", tableName);
-            var command = new SqlCommand(sql, cnn);
-            var dataReader = command.ExecuteReader();
             var result = new Dictionary<string, Guid[]>();
-            while (dataReader.Read())
+            using (var cnn = new SqlConnection(this.ConnectionString))
             {
-                var tempList = new List<Guid>();
-                for (int i = 2; i < dataReader.FieldCount; i++)
+                var sql = $"select * from {tableName}";
+                var command = new SqlCommand(sql, cnn);
+                command.Connection.Open();
+                var dataReader = command.ExecuteReader();
+                while (dataReader.Read())
                 {
-                    tempList.Add(new Guid(dataReader.GetString(i)));
+                    var tempList = new List<Guid>();
+                    for (int i = 2; i < dataReader.FieldCount; i++)
+                    {
+                        tempList.Add(new Guid(dataReader.GetString(i)));
+                    }
+                    result[dataReader.GetString(1)] = tempList.ToArray();
                 }
-                result[dataReader.GetString(1)] = tempList.ToArray();
             }
-            cnn.Close();
+            
             return result;
+        }
+
+        public void InsertData(string tableName, string data)
+        {
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            {
+                string sql = $"INSERT INTO {tableName} VALUES ({data})";
+                SqlCommand command = new SqlCommand(sql, cnn);
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+                command.Dispose();
+            }
+        }
+
+        public string PreparingInsertCalcResult(double value, string time)
+        {
+            var lastId = "0";
+            var stringValue = "";
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            { 
+                var sql = $"SELECT TOP 1 * FROM {nameof(DataBaseTables.Calculations)} ORDER BY ID DESC";
+                var command = new SqlCommand(sql, cnn);
+                command.Connection.Open();
+                var dataReader = command.ExecuteReader();
+
+                stringValue = value.ToString().Replace(",", ".");
+
+                while (dataReader.Read())
+                {
+                    lastId = dataReader.GetValue(0).ToString();
+                }
+            }
+            
+            var id = Convert.ToInt32(lastId) + 1;
+
+            return $"{id}, {stringValue}, '{time}'";
+        }
+
+        private PerformanceIndex GetLastPerformanceIndex()
+        {
+            var id = "0";
+            var value = "0";
+            var timeStamp = "0";
+
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            {
+                var sql = $"SELECT TOP 1 * FROM {nameof(DataBaseTables.Calculations)} ORDER BY ID DESC";
+                var command = new SqlCommand(sql, cnn);
+                command.Connection.Open();
+                var dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    id = dataReader.GetValue(0).ToString();
+                    value = dataReader.GetValue(1).ToString();
+                    timeStamp = dataReader.GetValue(2).ToString();
+                }
+            }
+
+            return new PerformanceIndex
+                (Convert.ToInt32(id), Convert.ToDouble(value), Convert.ToDateTime(timeStamp));
+        }
+        
+        public double GetIncrementOfIndex(double value)
+        {
+            var preValue = this.GetLastPerformanceIndex();
+
+            return preValue.Value - value;
+        }
+
+        public double GetRateOfChange(double value, DateTime time)
+        {
+            var increment = this.GetIncrementOfIndex(value);
+            var timeDiff = time.Subtract(this.GetLastPerformanceIndex().TimeStamp);
+            if (timeDiff == TimeSpan.Zero)
+            {
+                throw new ArgumentException("Одинаковове время двух последних расчетов");
+            }
+            return increment / timeDiff.TotalSeconds;
         }
     }
 }

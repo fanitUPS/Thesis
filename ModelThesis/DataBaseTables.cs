@@ -13,6 +13,7 @@ namespace ModelThesis
     {
         Currents,
         Powers,
-        Voltages
+        Voltages,
+        Calculations
     }
 }
