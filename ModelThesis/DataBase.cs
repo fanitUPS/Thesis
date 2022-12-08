@@ -14,6 +14,8 @@ namespace ModelThesis
         /// </summary>
         public string ConnectionString { get; set; }
 
+        private const string _timePattern = "yyyy-MM-dd HH:mm:ss";
+
         /// <summary>
         /// Конструктор класса
         /// </summary>
@@ -58,8 +60,8 @@ namespace ModelThesis
         /// <param name="data">Данные для записи</param>
         public void InsertData(string tableName, PerformanceIndex index)
         {
-            var data = this.PreparingInsertCalcResult(index.Value, index.TimeStamp.ToString());
-            
+            var data = this.PreparingInsertCalcResult(index.Value, index.TimeStamp.ToString(_timePattern));
+            Console.WriteLine(data);
             using (var cnn = new SqlConnection(this.ConnectionString))
             {
                 string sql = $"INSERT INTO {tableName} VALUES ({data})";
@@ -138,7 +140,7 @@ namespace ModelThesis
         {
             var preValue = this.GetLastPerformanceIndex();
 
-            return preValue.Value - index.Value;
+            return Math.Round(preValue.Value - index.Value, 5);
         }
 
         /// <summary>
@@ -149,13 +151,13 @@ namespace ModelThesis
         /// <exception cref="ArgumentException">Исключение</exception>
         public double GetRateOfChange(PerformanceIndex index)
         {
-            var increment = this.GetIncrementOfIndex(index.Value);
+            var increment = this.GetIncrementOfIndex(index);
             var timeDiff = index.TimeStamp.Subtract(this.GetLastPerformanceIndex().TimeStamp);
             if (timeDiff == TimeSpan.Zero)
             {
-                throw new ArgumentException("Одинаковове время двух последних расчетов");
+                throw new ArgumentException("Одинаковое время двух последних расчетов");
             }
-            return increment / timeDiff.TotalSeconds;
+            return Math.Round(increment / timeDiff.TotalSeconds, 5) * 100;
         }
     }
 }

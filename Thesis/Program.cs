@@ -2,6 +2,9 @@
 using ModelThesis;
 using System.Collections.Generic;
 using lib60870;
+using MalProv = Monitel.Mal.Providers;
+using Mal = Monitel.Mal;
+using MalProvMal = Monitel.Mal.Providers.Mal;
 
 namespace ConsoleApp
 {
@@ -15,10 +18,17 @@ namespace ConsoleApp
         /// </summary>
         private const string _connectionStringToRtdb = "10.221.3.29:900";
 
+        private const string _connectionStringToCK11 = "10.221.3.29";
+
+        private const string _nameOfModel = "ODB_EnergyMain";
+
+        private const int _numberOfModel = 30;
+
         /// <summary>
         /// Строка подключения к БД
         /// </summary>
-        private const string _connectionStringToDb = "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
+        private const string _connectionStringToDb = 
+            "data source=STS20;initial catalog=ThesisDatabase;trusted_connection=true";
 
         /// <summary>
         /// Адрес сервера передачи ТИ
@@ -48,96 +58,91 @@ namespace ConsoleApp
             
             try
             {
-                var starTime = DateTime.Now;
-                Console.WriteLine(starTime);
+                //var starTime = DateTime.Now;
+                //Console.WriteLine(starTime);
 
-                var dataBase = new DataBase(_connectionStringToDb);
-                var dataCurrent = dataBase.SelectUuid(nameof(DataBaseTables.Currents));
-                var dataPower = dataBase.SelectUuid(nameof(DataBaseTables.Powers));
-                var dataVoltage = dataBase.SelectUuid(nameof(DataBaseTables.Voltages));
+                //var dataBase = new DataBase(_connectionStringToDb);
+                //var dataCurrent = dataBase.SelectUuid(nameof(DataBaseTables.Currents));
+                //var dataPower = dataBase.SelectUuid(nameof(DataBaseTables.Powers));
+                //var dataVoltage = dataBase.SelectUuid(nameof(DataBaseTables.Voltages));
 
-                var voltageList = new List<SignalVoltage>();
-                var currentList = new List<SignalCurrent>();
-                var powerList = new List<SignalPower>();
+                //var voltageList = new List<SignalVoltage>();
+                //var currentList = new List<SignalCurrent>();
+                //var powerList = new List<SignalPower>();
 
-                var time = DateTime.Now;
+                //var time = DateTime.Now;
 
-                foreach (var value in dataVoltage)
-                {
-                    var tempData = new Verification(dataRequest.GetSignals(value.Value));
-                    var data = tempData.GetValidData();
-                    voltageList.Add(new SignalVoltage(value.Key,
-                        data[0].Value.AnalogValue,
-                        data[1].Value.AnalogValue,
-                        data[2].Value.AnalogValue,
-                        data[3].Value.AnalogValue));
+                //foreach (var value in dataVoltage)
+                //{
+                //    var tempData = new Verification(dataRequest.GetSignals(value.Value));
+                //    var data = tempData.GetValidData();
+                //    voltageList.Add(new SignalVoltage(value.Key,
+                //        data[0].Value.AnalogValue,
+                //        (DateTime)data[0].Time,
+                //        data[1].Value.AnalogValue,
+                //        data[2].Value.AnalogValue,
+                //        data[3].Value.AnalogValue));
+                //}
 
-                    if (data[0].Time < time)
-                    {
-                        time = Convert.ToDateTime(data[0].Time);
-                    }
-                }
+                //foreach (var value in dataCurrent)
+                //{
+                //    var tempData = new Verification(dataRequest.GetSignals(value.Value));
+                //    var data = tempData.GetValidData();
+                //    currentList.Add(new SignalCurrent(value.Key,
+                //        data[0].Value.AnalogValue,
+                //        (DateTime)data[0].Time,
+                //        data[1].Value.AnalogValue));
+                //}
 
-                foreach (var value in dataCurrent)
-                {
-                    var tempData = new Verification(dataRequest.GetSignals(value.Value));
-                    var data = tempData.GetValidData();
-                    currentList.Add(new SignalCurrent(value.Key,
-                        data[0].Value.AnalogValue,
-                        data[1].Value.AnalogValue));
+                //foreach (var value in dataPower)
+                //{
+                //    var tempData = new Verification(dataRequest.GetSignals(value.Value));
+                //    var data = tempData.GetValidData();
+                //    powerList.Add(new SignalPower(value.Key,
+                //        data[0].Value.AnalogValue,
+                //        (DateTime)data[0].Time,
+                //        data[1].Value.AnalogValue));
+                //}
 
-                    if (data[0].Time < time)
-                    {
-                        time = Convert.ToDateTime(data[0].Time);
-                    }
-                }
+                //var preparingData = new PreparingData(
+                //    powerList.ToArray(),
+                //    voltageList.ToArray(),
+                //    currentList.ToArray());
 
-                foreach (var value in dataPower)
-                {
-                    var tempData = new Verification(dataRequest.GetSignals(value.Value));
-                    var data = tempData.GetValidData();
-                    powerList.Add(new SignalPower(value.Key,
-                        data[0].Value.AnalogValue,
-                        data[1].Value.AnalogValue));
+                //var voltages = preparingData.PreparingNodeData();
+                //var currents = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
+                //var powers = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
 
-                    if (data[0].Time < time)
-                    {
-                        time = Convert.ToDateTime(data[0].Time);
-                    }
-                }
+                //var calc = new Calculation(powers, currents, voltages);
 
-                var preparingData = new PreparingData(
-                    powerList.ToArray(),
-                    voltageList.ToArray(),
-                    currentList.ToArray());
 
-                var voltages = preparingData.PreparingNodeData();
-                var currents = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
-                var powers = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
+                //var index = calc.GetPerformanceIndex();
+                //Console.WriteLine(index.Value);
+                //Console.WriteLine(calc.CurrentIndex);
+                //Console.WriteLine(calc.VoltagetIndex);
+                //Console.WriteLine(calc.PowerIndex);
 
-                var calc = new Calculation(powers, currents, voltages);
+                //var stopTime = DateTime.Now;
+                //Console.WriteLine((stopTime - starTime).TotalSeconds);
+                //Console.WriteLine(5 > (stopTime - starTime).TotalSeconds);
+                //Console.WriteLine("time of index: "+index.TimeStamp);
 
-                var valueIndex = calc.GetPerformanceIndex();
-                Console.WriteLine(valueIndex);
-                Console.WriteLine(calc.CurrentIndex);
-                Console.WriteLine(calc.VoltagetIndex);
-                Console.WriteLine(calc.PowerIndex);
+                //var send = new DataResponse(_serverAddress, _serverPort, index, _coa, _ioa);
+                //send.SendPerformanceIndex();
 
-                var index = new PerformanceIndex(0, valueIndex, time);
+                //Console.WriteLine("скорость приращения:" + dataBase.GetRateOfChange(index));
+                //Console.WriteLine("Приращение: "+dataBase.GetIncrementOfIndex(index));
 
-                var stopTime = DateTime.Now;
-                Console.WriteLine((stopTime - starTime).TotalSeconds);
-                Console.WriteLine(5 > (stopTime - starTime).TotalSeconds);
-                Console.WriteLine(index.TimeStamp);
+                //dataBase.InsertData(nameof(DataBaseTables.Calculations), index);
 
-                var send = new DataResponse(_serverAddress, _serverPort, index, _coa, _ioa);
-                send.SendPerformanceIndex();
+                var uuidBranchFolder = "2F9E9FFE-755E-4BA7-85A6-0BE43626FE8A";
 
-                Console.WriteLine(dataBase.GetRateOfChange(index));
-                Console.WriteLine(dataBase.GetIncrementOfIndex(index));
+                var model = new SynchronizeModel(_connectionStringToCK11, _nameOfModel, 55);
 
-                dataBase.InsertData(nameof(DataBaseTables.Calculations), index);
+                model.UpdatePowerUuid(uuidBranchFolder);
 
+                
+                Console.WriteLine("Finish");
                 Console.ReadKey();
             }
             catch (Exception e)

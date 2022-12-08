@@ -1,12 +1,99 @@
-﻿using System;
+﻿using Monitel.Mal;
+using Monitel.Mal.Context.CIM16;
+using Monitel.Rtdb.Api.Config;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Remoting.Contexts;
+using System.Text.RegularExpressions;
+using Mal = Monitel.Mal;
 
 namespace ModelThesis
 {
-    class SynchronizeModel
+    public class SynchronizeModel
     {
+        public string ConnectionToDbCk11 { get; internal set; }
+
+        public string NameOfDb { get; internal set; }
+
+        public int VersionOfModel { get; internal set; }
+
+        public SynchronizeModel(string connectionCk11, string nameOfDb, int versionOfmodel)
+        {
+            ConnectionToDbCk11 = connectionCk11;
+            NameOfDb = nameOfDb;
+            VersionOfModel = versionOfmodel;
+        }
+
+        private Mal.Providers.MalContextParams CreateContextParam()
+        {
+            var context = new Mal.Providers.MalContextParams()
+            {
+                OdbServerName = ConnectionToDbCk11,
+                OdbInstanseName = NameOfDb,
+                OdbModelVersionId = VersionOfModel,
+            };
+
+            return context;
+        }
+
+        private Mal.Providers.Mal.MalProvider CreateProvider()
+        {
+            var provider = new Mal.Providers.Mal.MalProvider
+                (CreateContextParam(), Mal.Providers.MalContextMode.Open, "malApiPtur");
+
+            return provider;
+        }
+
+        private Mal.ModelImage CreateModelImage(Mal.Providers.Mal.MalProvider malProvider)
+        {
+            return new ModelImage(malProvider);
+        }
+
+        public void UpdatePowerUuid(string branchGroupFolderUuid)
+        {
+            var provider = CreateProvider();
+            var model = CreateModelImage(provider);
+
+            var dict = new Dictionary<string, string>();
+
+            var patternMdp = @"\w*\s*МДП\s*\w*";
+
+
+            if (model != null)
+            {
+                var branchGroupFolder = model.GetObject(Guid.Parse(branchGroupFolderUuid));
+
+                foreach (BranchGroup branchGroup in branchGroupFolder.GetByAssocM("ChildObjects"))
+                {
+                    foreach (Analog analog in branchGroup.GetByAssocM("ChildObjects"))
+                    {
+                        foreach (RemoteAnalogValue analogValue in analog.GetByAssocM("ChildObjects"))
+                        {
+                            Console.WriteLine(Regex.IsMatch(analog.name.ToString(), patternMdp));
+                            if (Regex.IsMatch(analog.name.ToString(), patternMdp))
+                            {
+                                dict[$"{analogValue.name} МДП666"] = analogValue.Uid.ToString();
+                            }
+                            else
+                            {
+                                dict[analogValue.name] = analogValue.Uid.ToString();
+                            }
+                        }
+                    }
+                }
+
+                foreach (var item in dict)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+            else
+            {
+                throw new ArgumentException
+                    ($"Не удалось подключиться к модели версии {this.VersionOfModel}");
+            }
+
+            provider.Dispose();
+        }
     }
 }

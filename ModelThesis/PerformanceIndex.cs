@@ -1,19 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelThesis
 {
+    /// <summary>
+    /// Класс хранения показателя тяжести
+    /// </summary>
     public class PerformanceIndex
     {
+        /// <summary>
+        /// ИД показателя
+        /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Зачение показателя
+        /// </summary>
         public double Value { get; set; }
 
+        /// <summary>
+        /// Метка времени
+        /// </summary>
         public DateTime TimeStamp { get; set; }
 
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="id">ИД показателя</param>
+        /// <param name="value">Зачение показателя</param>
+        /// <param name="timeStamp">Метка времени</param>
         public PerformanceIndex(int id, double value, DateTime timeStamp)
         {
             Id = id;

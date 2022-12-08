@@ -1,4 +1,6 @@
-﻿namespace ModelThesis
+﻿using System;
+
+namespace ModelThesis
 {
     /// <summary>
     /// Класс хранения ТИ для тока
@@ -24,9 +26,10 @@
         /// </summary>
         /// <param name="signalName">Название ЛЭП</param>
         /// <param name="signalValue">Значение тока</param>
+        /// <param name="time">Метка времени</param>
         /// <param name="maxCurrent">АДТН ЛЭП</param>
-        public SignalCurrent(string signalName, double signalValue,
-            double maxCurrent) : base (signalName, signalValue)
+        public SignalCurrent(string signalName, double signalValue, DateTime time,
+            double maxCurrent) : base (signalName, signalValue, time)
         {
             MaxCurrent = maxCurrent;
         }

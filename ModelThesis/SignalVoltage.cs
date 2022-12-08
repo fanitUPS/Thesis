@@ -1,4 +1,6 @@
-﻿namespace ModelThesis
+﻿using System;
+
+namespace ModelThesis
 {
     /// <summary>
     /// Класс хранения ТИ напряжения
@@ -52,11 +54,12 @@
         /// </summary>
         /// <param name="signalName">Название объекта</param>
         /// <param name="signalValue">Значение напряжения</param>
+        /// <param name="time">Метка времени</param>
         /// <param name="maxVoltage">Верхняя граница напряжения объекта</param>
         /// <param name="minVoltage">Нижняя граница напряжения объекта</param>
-        public SignalVoltage(string signalName, double signalValue,
+        public SignalVoltage(string signalName, double signalValue, DateTime time,
             double maxVoltage, double minVoltage, double nomVoltage)
-            : base(signalName, signalValue)
+            : base(signalName, signalValue, time)
         {
             MaxVoltage = maxVoltage;
             MinVoltage = minVoltage;

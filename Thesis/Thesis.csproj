@@ -85,9 +85,24 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Monitel.DirectoryClient">
+      <HintPath>bin\Debug\Monitel.DirectoryClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.Mal">
+      <HintPath>bin\Debug\Monitel.Mal.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.Mal.SharedMemory">
+      <HintPath>bin\Debug\Monitel.Mal.SharedMemory.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.PlatformInfrastructure">
+      <HintPath>bin\Debug\Monitel.PlatformInfrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Monitel.Rtdb.Api, Version=3.0.7082.28397, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Monitel.Rtdb.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.Service.Common">
+      <HintPath>..\Monitel.Service.Common.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

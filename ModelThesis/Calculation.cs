@@ -81,6 +81,8 @@ namespace ModelThesis
             set => _voltageSignals = EmptyCheck(value);
         }
 
+        private DateTime _timeStampIndex = DateTime.Now;
+
         /// <summary>
         /// Конструктор класса
         /// </summary>
@@ -139,6 +141,11 @@ namespace ModelThesis
                         ("Номинальное напряжение равно 0.");
                 }
 
+                if (DateTime.Compare(_timeStampIndex, (DateTime)result["Time"][i]) > 0)
+                {
+                    _timeStampIndex = (DateTime)result["Time"][i];
+                }
+
                 var fu = vu * 0.98d;
                 var fl = vl * 1.06d;
 
@@ -165,8 +172,8 @@ namespace ModelThesis
 
                 var upper = Math.Pow(du / gu, 4d);
                 var lower = Math.Pow(dl / gl, 4d);
-                result[i, 5] = Math.Round(upper, 5);
-                result[i, 6] = Math.Round(lower, 5);
+                result[i, 6] = Math.Round(upper, 5);
+                result[i, 7] = Math.Round(lower, 5);
             }
 
             return result;
@@ -189,6 +196,12 @@ namespace ModelThesis
             {
                 var p = Math.Abs(Convert.ToDouble(result["Value"][i]));
                 var mpf = Convert.ToDouble(result["MaxValue"][i]);
+
+                if (DateTime.Compare(_timeStampIndex, (DateTime)result["Time"][i]) > 0)
+                {
+                    _timeStampIndex = (DateTime)result["Time"][i];
+                }
+
                 const double baseP = 1000d;
                 var preLim = mpf * 0.9;
 
@@ -201,7 +214,7 @@ namespace ModelThesis
                 var gp = (mpf - preLim) / baseP;
 
                 var powerCalc = Math.Pow(dp / gp, 4d);
-                result[i, 3] = Math.Round(powerCalc, 5);
+                result[i, 4] = Math.Round(powerCalc, 5);
 
             }
 
@@ -225,6 +238,12 @@ namespace ModelThesis
             {
                 var curr = Math.Abs(Convert.ToDouble(result["Value"][i]));
                 var max_curr = Convert.ToDouble(result["MaxValue"][i]);
+
+                if (DateTime.Compare(_timeStampIndex, (DateTime)result["Time"][i]) > 0)
+                {
+                    _timeStampIndex = (DateTime)result["Time"][i];
+                }
+
                 const double baseI = 1000d;
                 var preLim = max_curr * 0.9;
 
@@ -237,7 +256,7 @@ namespace ModelThesis
                 var gi = (max_curr - preLim) / baseI;
 
                 var currentCalc = Math.Pow(di / gi, 4d);
-                result[i, 3] = Math.Round(currentCalc, 5);
+                result[i, 4] = Math.Round(currentCalc, 5);
 
             }
  
@@ -248,7 +267,7 @@ namespace ModelThesis
         /// Расчет системного показателя тяжести
         /// </summary>
         /// <returns>Системный показатель тяжести</returns>
-        public double GetPerformanceIndex()
+        public PerformanceIndex GetPerformanceIndex()
         {        
             var voltage = this.GetVoltageIndex();
             var power = this.GetPowerIndex();
@@ -264,7 +283,7 @@ namespace ModelThesis
             var result = calcUpper + calcLower + calcPower + calcCurrent;
 
             
-            return Math.Round(Math.Pow(result, 0.25d), 5);
+            return new PerformanceIndex(0, Math.Round(Math.Pow(result, 0.25d), 5), _timeStampIndex);
         }
     }
 }

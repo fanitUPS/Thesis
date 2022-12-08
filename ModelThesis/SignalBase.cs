@@ -13,6 +13,11 @@ namespace ModelThesis
         public string SignalName { get; set; }
 
         /// <summary>
+        /// Метка времени
+        /// </summary>
+        public DateTime TimeStamp { get; set; }
+
+        /// <summary>
         /// Значение ТИ
         /// </summary>
         private double _signalValue;
@@ -31,10 +36,12 @@ namespace ModelThesis
         /// </summary>
         /// <param name="signalName">Название объекта</param>
         /// <param name="signalValue">Значение ТИ</param>
-        protected SignalBase(string signalName, double signalValue)
+        /// <param name="time">Метка времени</param>
+        protected SignalBase(string signalName, double signalValue, DateTime time)
         {
             SignalName = signalName;
             SignalValue = signalValue;
+            TimeStamp = time;
         }
 
         /// <summary>

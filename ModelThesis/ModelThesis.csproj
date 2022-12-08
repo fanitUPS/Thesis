@@ -52,6 +52,21 @@
     <Reference Include="Microsoft.Data.Analysis">
       <HintPath>..\packages\Microsoft.Data.Analysis.0.20.0\lib\netstandard2.0\Microsoft.Data.Analysis.dll</HintPath>
     </Reference>
+    <Reference Include="Monitel.DirectoryClient">
+      <HintPath>..\Thesis\bin\Debug\Monitel.DirectoryClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.Mal">
+      <HintPath>..\Monitel.Mal.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.Mal.Context.CIM16">
+      <HintPath>..\Thesis\bin\Debug\Monitel.Mal.Context.CIM16.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.Mal.SharedMemory">
+      <HintPath>..\Thesis\bin\Debug\Monitel.Mal.SharedMemory.dll</HintPath>
+    </Reference>
+    <Reference Include="Monitel.PlatformInfrastructure">
+      <HintPath>..\Thesis\bin\Debug\Monitel.PlatformInfrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Monitel.Rtdb.Api, Version=3.0.7082.28397, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Thesis\bin\Debug\Monitel.Rtdb.Api.dll</HintPath>
