@@ -11,11 +11,11 @@ namespace ModelThesis
 {
     public class SynchronizeModel
     {
-        public string ConnectionToDbCk11 { get; internal set; }
+        public string ConnectionToDbCk11 { get; private set; }
 
-        public string NameOfDb { get; internal set; }
+        public string NameOfDb { get; private set; }
 
-        public int VersionOfModel { get; internal set; }
+        public int VersionOfModel { get; private set; }
 
         public SynchronizeModel(string connectionCk11, string nameOfDb, int versionOfmodel)
         {
@@ -49,51 +49,47 @@ namespace ModelThesis
             return new ModelImage(malProvider);
         }
 
-        public void UpdatePowerUuid(string branchGroupFolderUuid)
+        public List<UuidContainer> UpdatePowerUuid(string branchGroupFolderUuid)
         {
             var provider = CreateProvider();
             var model = CreateModelImage(provider);
 
-            var dict = new Dictionary<string, string>();
-
+            var result = new List<UuidContainer>();
             var patternMdp = @"\w*\s*МДП\s*\w*";
-
 
             if (model != null)
             {
                 var branchGroupFolder = model.GetObject(Guid.Parse(branchGroupFolderUuid));
-
                 foreach (BranchGroup branchGroup in branchGroupFolder.GetByAssocM("ChildObjects"))
                 {
+                    var tempMdpList = new List<string>();
+                    var tempFactList = new List<string>();
                     foreach (Analog analog in branchGroup.GetByAssocM("ChildObjects"))
                     {
                         foreach (RemoteAnalogValue analogValue in analog.GetByAssocM("ChildObjects"))
                         {
-                            Console.WriteLine(Regex.IsMatch(analog.name.ToString(), patternMdp));
                             if (Regex.IsMatch(analog.name.ToString(), patternMdp))
                             {
-                                dict[$"{analogValue.name} МДП666"] = analogValue.Uid.ToString();
+                                tempMdpList.Add(analogValue.Uid.ToString());
                             }
                             else
                             {
-                                dict[analogValue.name] = analogValue.Uid.ToString();
+                                tempFactList.Add(analogValue.Uid.ToString());
                             }
                         }
                     }
+                    result.Add(new UuidContainer(branchGroup.name, tempFactList[0], tempMdpList[0]));
                 }
+                provider.Dispose();
 
-                foreach (var item in dict)
-                {
-                    Console.WriteLine(item);
-                }
+                return result;
             }
             else
             {
+                provider.Dispose();
                 throw new ArgumentException
                     ($"Не удалось подключиться к модели версии {this.VersionOfModel}");
             }
-
-            provider.Dispose();
         }
     }
 }

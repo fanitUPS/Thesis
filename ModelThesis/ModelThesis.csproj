@@ -95,6 +95,7 @@
     <Compile Include="SignalPower.cs" />
     <Compile Include="SignalVoltage.cs" />
     <Compile Include="SynchronizeModel.cs" />
+    <Compile Include="UuidContainer.cs" />
     <Compile Include="Verification.cs" />
     <Compile Include="DataRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

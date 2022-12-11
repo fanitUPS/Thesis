@@ -10,17 +10,17 @@ namespace ModelThesis
         /// <summary>
         /// ИД показателя
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         /// <summary>
         /// Зачение показателя
         /// </summary>
-        public double Value { get; set; }
+        public double Value { get; private set; }
 
         /// <summary>
         /// Метка времени
         /// </summary>
-        public DateTime TimeStamp { get; set; }
+        public DateTime TimeStamp { get; private set; }
 
         /// <summary>
         /// Конструктор класса

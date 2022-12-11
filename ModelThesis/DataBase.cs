@@ -58,17 +58,15 @@ namespace ModelThesis
         /// </summary>
         /// <param name="tableName">Имя таблицы, куда записывается результат</param>
         /// <param name="data">Данные для записи</param>
-        public void InsertData(string tableName, PerformanceIndex index)
+        public void InsertPerformanceIndex(string tableName, PerformanceIndex index)
         {
             var data = this.PreparingInsertCalcResult(index.Value, index.TimeStamp.ToString(_timePattern));
-            Console.WriteLine(data);
             using (var cnn = new SqlConnection(this.ConnectionString))
             {
                 string sql = $"INSERT INTO {tableName} VALUES ({data})";
                 SqlCommand command = new SqlCommand(sql, cnn);
                 command.Connection.Open();
                 command.ExecuteNonQuery();
-                command.Dispose();
             }
         }
 
@@ -158,6 +156,98 @@ namespace ModelThesis
                 throw new ArgumentException("Одинаковое время двух последних расчетов");
             }
             return Math.Round(increment / timeDiff.TotalSeconds, 5) * 100;
+        }
+
+        private string GetLastId(string tableName)
+        {
+            var id = "0";
+            var listUuidFromDb = new List<UuidContainer>();
+
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            {
+                var sqlSelectId = $"SELECT TOP 1 * FROM {tableName} ORDER BY ID DESC";
+                var commandSelectId = new SqlCommand(sqlSelectId, cnn);
+                commandSelectId.Connection.Open();
+                var dataReader = commandSelectId.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    id = dataReader.GetValue(0).ToString();
+                }
+            }
+            return id;
+        }
+
+        public List<UuidContainer> GetUuidsFromDb(string tableName)
+        {
+            var listUuidFromDb = new List<UuidContainer>();
+
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            {
+                var sqlSelect = $"SELECT * FROM {tableName}";
+                var commandSelect = new SqlCommand(sqlSelect, cnn);
+                commandSelect.Connection.Open();
+                var dataReader = commandSelect.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    var nameUuid = dataReader.GetValue(1).ToString();
+                    var factUuid = dataReader.GetValue(2).ToString();
+                    var maxUuid = dataReader.GetValue(3).ToString();
+
+                    if (tableName == nameof(DataBaseTables.Voltages))
+                    {
+                        var minUuid = dataReader.GetValue(4).ToString();
+                        var nomUuid = dataReader.GetValue(5).ToString();
+                        listUuidFromDb.Add(new UuidContainer(nameUuid, factUuid, maxUuid, minUuid, nomUuid));
+                    }
+                    else
+                    {
+                        listUuidFromDb.Add(new UuidContainer(nameUuid, factUuid, maxUuid));
+                    }
+                }
+            }
+            return listUuidFromDb;
+        }
+
+        public void InsertUuids(List<UuidContainer> listUuidFromModel, string tableName)
+        {
+            var id = GetLastId(tableName);
+
+            var listUuidFromDb = GetUuidsFromDb(tableName);
+
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            {
+                foreach (var valueDb in listUuidFromDb)
+                {
+                    foreach (var valueModel in listUuidFromModel)
+                    {
+                        if (valueDb.Value != valueModel.Value || valueDb.MaxValue != valueModel.MaxValue ||
+                        string.IsNullOrEmpty(valueModel.MinValue) && string.IsNullOrEmpty(valueModel.NomValue))
+                        {
+                            var newId = Convert.ToInt32(id) + 1;
+                            var sqlInsert = $"INSERT INTO {tableName} VALUES ({newId}, " +
+                                $"{valueModel.Name}, {valueModel.Value}, {valueModel.MaxValue})";
+                            
+                            var commandInsert = new SqlCommand(sqlInsert, cnn);
+                            commandInsert.Connection.Open();
+                            commandInsert.ExecuteNonQuery();
+                        }
+
+                        else
+                        {
+                            var newId = Convert.ToInt32(id) + 1;
+                            var sqlInsert = $"INSERT INTO {tableName} VALUES " +
+                                $"({newId}, {valueModel.Name}, " +
+                                $"{valueModel.Value}, {valueModel.MaxValue}" +
+                                $", {valueModel.MinValue}, {valueModel.NomValue})";
+
+                            var commandInsert = new SqlCommand(sqlInsert, cnn);
+                            commandInsert.Connection.Open();
+                            commandInsert.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
         }
     }
 }

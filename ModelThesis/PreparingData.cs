@@ -12,17 +12,17 @@ namespace ModelThesis
         /// <summary>
         /// Массив ТИ активной мощности
         /// </summary>
-        public SignalPower[] PowerSignals { get; set; }
+        public SignalPower[] PowerSignals { get; private set; }
 
         /// <summary>
         /// Массив ТИ тока
         /// </summary>
-        public SignalCurrent[] CurrentSignals { get; set; }
+        public SignalCurrent[] CurrentSignals { get; private set; }
 
         /// <summary>
         /// Массив ТИ напряжения
         /// </summary>
-        public SignalVoltage[] VoltageSignals { get; set; }
+        public SignalVoltage[] VoltageSignals { get; private set; }
 
         /// <summary>
         /// Конструктор класса

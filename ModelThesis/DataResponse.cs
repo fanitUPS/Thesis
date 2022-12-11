@@ -11,32 +11,32 @@ namespace ModelThesis
         /// <summary>
         /// IP адрес расчетного сервера
         /// </summary>
-        public string ServerIpAddress { get; set; }
+        public string ServerIpAddress { get; private set; }
 
         /// <summary>
         /// Порт устройства МЭК 104 в СК-11(по умолчанию 2404)
         /// </summary>
-        public int ServerPort { get; set; }
+        public int ServerPort { get; private set; }
 
         /// <summary>
         /// Адрес slave в СК-11
         /// </summary>
-        public int Coa { get; set; }
+        public int Coa { get; private set; }
 
         /// <summary>
         /// Адрес ТИ в СК-11
         /// </summary>
-        public int Ioa { get; set; }
+        public int Ioa { get; private set; }
 
         /// <summary>
         /// Метка времени
         /// </summary>
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; private set; }
 
         /// <summary>
         /// Значение расчета
         /// </summary>
-        public double Value { get; set; }
+        public double Value { get; private set; }
 
         /// <summary>
         /// Конструктор класса

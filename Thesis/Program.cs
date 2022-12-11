@@ -61,7 +61,7 @@ namespace ConsoleApp
                 //var starTime = DateTime.Now;
                 //Console.WriteLine(starTime);
 
-                //var dataBase = new DataBase(_connectionStringToDb);
+                var dataBase = new DataBase(_connectionStringToDb);
                 //var dataCurrent = dataBase.SelectUuid(nameof(DataBaseTables.Currents));
                 //var dataPower = dataBase.SelectUuid(nameof(DataBaseTables.Powers));
                 //var dataVoltage = dataBase.SelectUuid(nameof(DataBaseTables.Voltages));
@@ -134,13 +134,14 @@ namespace ConsoleApp
                 //Console.WriteLine("Приращение: "+dataBase.GetIncrementOfIndex(index));
 
                 //dataBase.InsertData(nameof(DataBaseTables.Calculations), index);
-
+  
                 var uuidBranchFolder = "2F9E9FFE-755E-4BA7-85A6-0BE43626FE8A";
 
                 var model = new SynchronizeModel(_connectionStringToCK11, _nameOfModel, 55);
+                
+                var powerUuids = model.UpdatePowerUuid(uuidBranchFolder);
 
-                model.UpdatePowerUuid(uuidBranchFolder);
-
+                dataBase.InsertUuids(powerUuids, nameof(DataBaseTables.Powers));
                 
                 Console.WriteLine("Finish");
                 Console.ReadKey();
@@ -148,6 +149,8 @@ namespace ConsoleApp
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.Source);
+                Console.WriteLine(e.TargetSite);
                 Console.ReadKey();
             }
         }

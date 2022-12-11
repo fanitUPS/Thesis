@@ -10,12 +10,12 @@ namespace ModelThesis
         /// <summary>
         /// Название объекта
         /// </summary>
-        public string SignalName { get; set; }
+        public string SignalName { get; private set; }
 
         /// <summary>
         /// Метка времени
         /// </summary>
-        public DateTime TimeStamp { get; set; }
+        public DateTime TimeStamp { get; private set; }
 
         /// <summary>
         /// Значение ТИ
