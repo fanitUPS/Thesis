@@ -49,7 +49,7 @@ namespace ModelThesis
                     result[dataReader.GetString(1)] = tempList.ToArray();
                 }
             }
-            
+
             return result;
         }
 
@@ -81,7 +81,7 @@ namespace ModelThesis
             var lastId = "0";
             var stringValue = "";
             using (var cnn = new SqlConnection(this.ConnectionString))
-            { 
+            {
                 var sql = $"SELECT TOP 1 * FROM {nameof(DataBaseTables.Calculations)} ORDER BY ID DESC";
                 var command = new SqlCommand(sql, cnn);
                 command.Connection.Open();
@@ -94,7 +94,7 @@ namespace ModelThesis
                     lastId = dataReader.GetValue(0).ToString();
                 }
             }
-            
+
             var id = Convert.ToInt32(lastId) + 1;
 
             return $"{id}, {stringValue}, '{time}'";
@@ -211,40 +211,43 @@ namespace ModelThesis
 
         public void InsertUuids(List<UuidContainer> listUuidFromModel, string tableName)
         {
-            var id = GetLastId(tableName);
-
             var listUuidFromDb = GetUuidsFromDb(tableName);
 
-            using (var cnn = new SqlConnection(this.ConnectionString))
+            foreach (var valueModel in listUuidFromModel)
             {
                 foreach (var valueDb in listUuidFromDb)
                 {
-                    foreach (var valueModel in listUuidFromModel)
-                    {
-                        if (valueDb.Value != valueModel.Value || valueDb.MaxValue != valueModel.MaxValue ||
+                    if (valueDb.Value != valueModel.Value || valueDb.MaxValue != valueModel.MaxValue ||
                         string.IsNullOrEmpty(valueModel.MinValue) && string.IsNullOrEmpty(valueModel.NomValue))
+                    {
+                        var id = GetLastId(tableName);
+                        using (var cnn = new SqlConnection(this.ConnectionString))
                         {
                             var newId = Convert.ToInt32(id) + 1;
-                            var sqlInsert = $"INSERT INTO {tableName} VALUES ({newId}, " +
-                                $"{valueModel.Name}, {valueModel.Value}, {valueModel.MaxValue})";
-                            
-                            var commandInsert = new SqlCommand(sqlInsert, cnn);
-                            commandInsert.Connection.Open();
-                            commandInsert.ExecuteNonQuery();
+                            var sql = $"INSERT INTO {tableName} VALUES ({newId}, " +
+                                $"'{valueModel.Name}', '{valueModel.Value}', '{valueModel.MaxValue}')";
+                            var command = new SqlCommand(sql, cnn);
+                            command.Connection.Open();
+                            command.ExecuteNonQuery();
                         }
-
-                        else
+                        break;
+                    }
+                    else
+                    {
+                        var id = GetLastId(tableName);
+                        using (var cnn = new SqlConnection(this.ConnectionString))
                         {
                             var newId = Convert.ToInt32(id) + 1;
-                            var sqlInsert = $"INSERT INTO {tableName} VALUES " +
-                                $"({newId}, {valueModel.Name}, " +
-                                $"{valueModel.Value}, {valueModel.MaxValue}" +
-                                $", {valueModel.MinValue}, {valueModel.NomValue})";
+                            var sql = $"INSERT INTO {tableName} VALUES " +
+                                $"({newId}, '{valueModel.Name}', " +
+                                $"'{valueModel.Value}', '{valueModel.MaxValue}'" +
+                                $", '{valueModel.MinValue}', '{valueModel.NomValue}')";
 
-                            var commandInsert = new SqlCommand(sqlInsert, cnn);
-                            commandInsert.Connection.Open();
-                            commandInsert.ExecuteNonQuery();
+                            var command = new SqlCommand(sql, cnn);
+                            command.Connection.Open();
+                            command.ExecuteNonQuery();
                         }
+                        break;
                     }
                 }
             }

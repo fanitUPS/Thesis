@@ -91,5 +91,15 @@ namespace ModelThesis
                     ($"Не удалось подключиться к модели версии {this.VersionOfModel}");
             }
         }
+
+        public List<UuidContainer> UpdateVoltageUuid(string voltageScheduleFolderUuid)
+        {
+            return new List<UuidContainer>();
+        }
+
+        public List<UuidContainer> UpdateCurrentUuid(string currentFolderUuid)
+        {
+            return new List<UuidContainer>();
+        }
     }
 }
