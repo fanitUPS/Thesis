@@ -43,24 +43,13 @@ namespace ModelThesis
         /// </summary>
         /// <param name="serverAddress">IP адрес расчетного сервера</param>
         /// <param name="serverPort">Порт устройства МЭК 104 в СК-11(по умолчанию 2404)</param>
-        /// <param name="index">Показатель тяжести</param>
-        /// <param name="coa">Адрес slave в СК-11</param>
-        /// <param name="ioa">Адрес ТИ в СК-11</param>
-        public DataResponse(string serverAddress, 
-            int serverPort, PerformanceIndex index, int coa, int ioa)
+        public DataResponse(string serverAddress, int serverPort)
         {
             ServerIpAddress = serverAddress;
             ServerPort = serverPort;
-            DateTime = index.TimeStamp;
-            Value = index.Value;
-            Coa = coa;
-            Ioa = ioa;
         }
 
-        /// <summary>
-        /// Отправка результата в виде ТИ
-        /// </summary>
-        public void SendPerformanceIndex()
+        public Server CreateServer()
         {
             var server = new Server();
             server.DebugOutput = false;
@@ -70,14 +59,22 @@ namespace ModelThesis
             server.SetLocalPort(this.ServerPort);
             server.Start();
 
+            return server;
+        }
+        
+        /// <summary>
+        /// Отправка результата в виде ТИ
+        /// </summary>
+        public void SendIndex(Server server, PerformanceIndex index, int coa, int ioa)
+        {
             var quality = new QualityDescriptor();
-            var newValue = (float)Math.Round(this.Value, 5);
+            var newValue = (float)Math.Round(index.Value, 5);
             var newAsdu = new ASDU(server.GetConnectionParameters(), 
-                CauseOfTransmission.PERIODIC, false, false, 1, this.Coa, false);
+                CauseOfTransmission.PERIODIC, false, false, 1, coa, false);
 
-            var CP56 = new CP56Time2a(this.DateTime);
+            var CP56 = new CP56Time2a(index.TimeStamp);
             var io = new MeasuredValueShortWithCP56Time2a
-                (this.Ioa, newValue, quality, CP56);
+                (ioa, newValue, quality, CP56);
 
             newAsdu.AddInformationObject(io);
             server.EnqueueASDU(newAsdu);

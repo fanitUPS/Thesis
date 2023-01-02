@@ -91,6 +91,10 @@
     <Reference Include="Monitel.Mal">
       <HintPath>bin\Debug\Monitel.Mal.dll</HintPath>
     </Reference>
+    <Reference Include="Monitel.Mal.Context.CIM16, Version=11.5.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Monitel.Mal.Context.CIM16.dll</HintPath>
+    </Reference>
     <Reference Include="Monitel.Mal.SharedMemory">
       <HintPath>bin\Debug\Monitel.Mal.SharedMemory.dll</HintPath>
     </Reference>

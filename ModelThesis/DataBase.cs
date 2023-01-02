@@ -212,42 +212,43 @@ namespace ModelThesis
         public void InsertUuids(List<UuidContainer> listUuidFromModel, string tableName)
         {
             var listUuidFromDb = GetUuidsFromDb(tableName);
+            
 
             foreach (var valueModel in listUuidFromModel)
-            {
-                foreach (var valueDb in listUuidFromDb)
+            {   
+                if (listUuidFromDb.Exists(x => x.Value == valueModel.Value && x.MaxValue == valueModel.MaxValue 
+                    && x.MinValue == valueModel.MinValue))
                 {
-                    if (valueDb.Value != valueModel.Value || valueDb.MaxValue != valueModel.MaxValue ||
-                        string.IsNullOrEmpty(valueModel.MinValue) && string.IsNullOrEmpty(valueModel.NomValue))
+                    continue;
+                }
+                
+                if (String.IsNullOrEmpty(valueModel.NomValue))
+                {
+                    var id = GetLastId(tableName);
+                    using (var cnn = new SqlConnection(this.ConnectionString))
                     {
-                        var id = GetLastId(tableName);
-                        using (var cnn = new SqlConnection(this.ConnectionString))
-                        {
-                            var newId = Convert.ToInt32(id) + 1;
-                            var sql = $"INSERT INTO {tableName} VALUES ({newId}, " +
-                                $"'{valueModel.Name}', '{valueModel.Value}', '{valueModel.MaxValue}')";
-                            var command = new SqlCommand(sql, cnn);
-                            command.Connection.Open();
-                            command.ExecuteNonQuery();
-                        }
-                        break;
+                        var newId = Convert.ToInt32(id) + 1;
+                        var sql = $"INSERT INTO {tableName} VALUES ({newId}, " +
+                            $"'{valueModel.Name}', '{valueModel.Value}', '{valueModel.MaxValue}')";
+                        var command = new SqlCommand(sql, cnn);
+                        command.Connection.Open();
+                        command.ExecuteNonQuery();
                     }
-                    else
+                }
+                else
+                {
+                    var id = GetLastId(tableName);
+                    using (var cnn = new SqlConnection(this.ConnectionString))
                     {
-                        var id = GetLastId(tableName);
-                        using (var cnn = new SqlConnection(this.ConnectionString))
-                        {
-                            var newId = Convert.ToInt32(id) + 1;
-                            var sql = $"INSERT INTO {tableName} VALUES " +
-                                $"({newId}, '{valueModel.Name}', " +
-                                $"'{valueModel.Value}', '{valueModel.MaxValue}'" +
-                                $", '{valueModel.MinValue}', '{valueModel.NomValue}')";
+                        var newId = Convert.ToInt32(id) + 1;
+                        var sql = $"INSERT INTO {tableName} VALUES " +
+                            $"({newId}, '{valueModel.Name}', " +
+                            $"'{valueModel.Value}', '{valueModel.MaxValue}'" +
+                            $", '{valueModel.MinValue}', '{valueModel.NomValue}')";
 
-                            var command = new SqlCommand(sql, cnn);
-                            command.Connection.Open();
-                            command.ExecuteNonQuery();
-                        }
-                        break;
+                        var command = new SqlCommand(sql, cnn);
+                        command.Connection.Open();
+                        command.ExecuteNonQuery();
                     }
                 }
             }

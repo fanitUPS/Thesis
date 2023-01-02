@@ -22,7 +22,7 @@ namespace ModelThesis
                 "10020000",
                 "10000020"
             };
-
+        
         /// <summary>
         /// Входные данные
         /// </summary>

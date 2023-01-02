@@ -34,5 +34,18 @@ namespace ModelThesis
             Value = value;
             MaxValue = maxValue;
         }
+
+        public bool CompareInstance(UuidContainer item)
+        {
+            if (this.Value == item.Value && this.MaxValue == item.MaxValue && this.MinValue == item.MinValue
+                && this.NomValue == item.NomValue)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
