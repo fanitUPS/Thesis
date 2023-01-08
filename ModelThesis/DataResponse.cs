@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using lib60870;
 
 namespace ModelThesis
@@ -78,6 +79,17 @@ namespace ModelThesis
 
             newAsdu.AddInformationObject(io);
             server.EnqueueASDU(newAsdu);
+        }
+
+        public async void WriteLocalIndex(string path, Calculation result)
+        {
+            File.WriteAllText(path, result.CurrentIndex.ToString());
+            var text = result.PowerIndex.ToString() + result.VoltagetIndex.ToString();
+            using (var file = new StreamWriter(path, append: true))
+            {
+                await file.WriteLineAsync(text);
+                file.Close();
+            }
         }
     }
 }

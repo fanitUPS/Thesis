@@ -147,7 +147,7 @@ namespace ModelThesis
                 }
 
                 var fu = vu * 0.98d;
-                var fl = vl * 1.06d;
+                var fl = vl * 1.04d;
 
                 var du = 0d;
                 if (vras > fu)
@@ -203,7 +203,7 @@ namespace ModelThesis
                 }
 
                 const double baseP = 1000d;
-                var preLim = mpf * 0.9;
+                var preLim = mpf * 0.94;
 
                 var dp = 0d;
                 if (p > preLim)
@@ -245,7 +245,7 @@ namespace ModelThesis
                 }
 
                 const double baseI = 1000d;
-                var preLim = max_curr * 0.9;
+                var preLim = max_curr * 0.94;
 
                 var di = 0d;
                 if (curr > preLim)
@@ -272,9 +272,9 @@ namespace ModelThesis
             var voltage = this.GetVoltageIndex();
             var power = this.GetPowerIndex();
             var current = this.GetCurrentIndex();
-            _powerIndex = power;
-            _currentIndex = current;
-            _voltageIndex = voltage;
+            _powerIndex = power.OrderByDescending("powerCalc");
+            _currentIndex = current.OrderByDescending("currentCalc");
+            _voltageIndex = voltage.OrderByDescending("lower");
 
             var calcUpper = Convert.ToDouble(voltage["upper"].Sum());
             var calcLower = Convert.ToDouble(voltage["lower"].Sum());

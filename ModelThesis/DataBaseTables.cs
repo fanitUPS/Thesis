@@ -14,6 +14,7 @@ namespace ModelThesis
         Currents,
         Powers,
         Voltages,
-        Calculations
+        Calculations,
+        Logs
     }
 }

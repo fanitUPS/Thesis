@@ -253,5 +253,20 @@ namespace ModelThesis
                 }
             }
         }
+
+        public void InsertLog(string errorMassage, DateTime time)
+        {
+            var lastId = this.GetLastId(nameof(DataBaseTables.Logs));
+            var id = Convert.ToInt32(lastId) + 1;
+            
+            using (var cnn = new SqlConnection(this.ConnectionString))
+            {
+                var data = $"{id}, '{errorMassage}', '{time.ToString(_timePattern)}'";
+                string sql = $"INSERT INTO {nameof(DataBaseTables.Logs)} VALUES ({data})";
+                SqlCommand command = new SqlCommand(sql, cnn);
+                command.Connection.Open();
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }
