@@ -66,13 +66,17 @@ namespace ModelThesis
         /// <summary>
         /// Отправка результата в виде ТИ
         /// </summary>
-        public void SendIndex(Server server, PerformanceIndex index, int coa, int ioa)
+        public void SendIndex(Server server, PerformanceIndex index, int coa, int ioa , bool valid)
         {
             var quality = new QualityDescriptor();
             var newValue = (float)Math.Round(index.Value, 5);
             var newAsdu = new ASDU(server.GetConnectionParameters(), 
                 CauseOfTransmission.PERIODIC, false, false, 1, coa, false);
-
+            
+            if (!valid)
+            {
+                quality.Invalid = true;
+            }
             var CP56 = new CP56Time2a(index.TimeStamp);
             var io = new MeasuredValueShortWithCP56Time2a
                 (ioa, newValue, quality, CP56);
