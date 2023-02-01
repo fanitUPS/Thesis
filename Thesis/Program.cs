@@ -67,208 +67,253 @@ namespace ConsoleApp
             var server = send.CreateServer();
             var dataBase = new DataBase(_connectionStringToDb);
             var time = DateTime.Now;
-            try
+
+
+            Console.WriteLine("запуск");
+            //System.Threading.Thread.Sleep(10000);
+            var index = new PerformanceIndex(0, 0.4d, DateTime.Now);
+            var rateOfChange = new PerformanceIndex(0, 0.02d, DateTime.Now);
+            var increment = new PerformanceIndex(0, 0.1d, DateTime.Now);
+            index.Value = 0.4d;
+            send.SendIndex(server, index, _coa, _ioa, true);
+            send.SendIndex(server, rateOfChange, _coa, 1001, true);
+            send.SendIndex(server, increment, _coa, 1000, true);
+
+            var rnd = new Random();
+            
+
+            for (int i = 0; i < 15; i++)
             {
-                string[] config = System.IO.File.ReadAllLines
-                    (@"C:\Users\stdAdmin.PL01N\Desktop\config\config.txt");
-
-                for (int i = 0; i < config.Length; i++)
-                {
-                    int index = config[i].IndexOf("=");
-                    var x = "";
-                    if (index >= 0)
-                    {
-                        x = config[i].Substring(index + 1);
-                    }
-                    else
-                    {
-                        throw new ArgumentException
-                            ($"Ошибка в {i + 1} строке конфигурцационного файла.");
-                    }
-
-                    switch (i)
-                    {
-                        case 0:
-                            var connectionStringToRtdb = x;
-                            break;
-                        case 1:
-                            var connectionStringToCK11 = x;
-                            break;
-                        case 2:
-                            var nameOfModel = x;
-                            break;
-                        case 3:
-                            var numberOfModel = int.Parse(x);
-                            break;
-                        case 4:
-                            var connectionStringToDb = x;
-                            break;
-                        case 5:
-                            var serverAddress = x;
-                            break;
-                        case 6:
-                            var serverPort = int.Parse(x);
-                            break;
-                        case 7:
-                            var coa = int.Parse(x);
-                            break;
-                        case 8:
-                            var ioa = int.Parse(x);
-                            break;
-                        case 9:
-                            var pathLocalResult = x;
-                            break;
-                    }
-                }
+                var random = rnd.Next(-20, 20);
+                var value =(100d - random) / 2000d;
+                increment.Value = value;
+                rateOfChange.Value = increment.Value / 1.5;
+                index.Value = index.Value + value;
+                System.Threading.Thread.Sleep(2000);
+                send.SendIndex(server, index, _coa, _ioa, true);
+                send.SendIndex(server, rateOfChange, _coa, 1001, true);
+                send.SendIndex(server, increment, _coa, 1000, true);
+                //Console.WriteLine($"{index.Value} {increment.Value} {rateOfChange.Value}");
+       
             }
-            catch (Exception e)
+            for (int i = 0; i < 15; i++)
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.Source);
-                Console.WriteLine(e.TargetSite);
-                dataBase.InsertLog(e.Message, time);
-                Console.ReadKey();
+                var random = rnd.Next(-20, 20);
+                var value = (100d - random) / 2000d;
+                increment.Value = -value;
+                rateOfChange.Value = increment.Value / 1.5;
+                index.Value = index.Value - value;
+                System.Threading.Thread.Sleep(2000);
+                send.SendIndex(server, index, _coa, _ioa, true);
+                send.SendIndex(server, rateOfChange, _coa, 1001, true);
+                send.SendIndex(server, increment, _coa, 1000, true);
+                //Console.WriteLine($"{index.Value} {increment.Value} {rateOfChange.Value}");
+
             }
 
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine("Начало работы.");
+
+            //try
+            //{
+            //    string[] config = System.IO.File.ReadAllLines
+            //        (@"C:\Users\stdAdmin.PL01N\Desktop\config\config.txt");
+
+            //    for (int i = 0; i < config.Length; i++)
+            //    {
+            //        int index = config[i].IndexOf("=");
+            //        var x = "";
+            //        if (index >= 0)
+            //        {
+            //            x = config[i].Substring(index + 1);
+            //        }
+            //        else
+            //        {
+            //            throw new ArgumentException
+            //                ($"Ошибка в {i + 1} строке конфигурцационного файла.");
+            //        }
+
+            //        switch (i)
+            //        {
+            //            case 0:
+            //                var connectionStringToRtdb = x;
+            //                break;
+            //            case 1:
+            //                var connectionStringToCK11 = x;
+            //                break;
+            //            case 2:
+            //                var nameOfModel = x;
+            //                break;
+            //            case 3:
+            //                var numberOfModel = int.Parse(x);
+            //                break;
+            //            case 4:
+            //                var connectionStringToDb = x;
+            //                break;
+            //            case 5:
+            //                var serverAddress = x;
+            //                break;
+            //            case 6:
+            //                var serverPort = int.Parse(x);
+            //                break;
+            //            case 7:
+            //                var coa = int.Parse(x);
+            //                break;
+            //            case 8:
+            //                var ioa = int.Parse(x);
+            //                break;
+            //            case 9:
+            //                var pathLocalResult = x;
+            //                break;
+            //        }
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //    Console.WriteLine(e.Source);
+            //    Console.WriteLine(e.TargetSite);
+            //    dataBase.InsertLog(e.Message, time);
+            //    Console.ReadKey();
+            //}
+
+            //while (true)
+            //{
+            //    try
+            //    {
+            //        Console.WriteLine("Начало работы.");
 
 
-                    var model = new SynchronizeModel(_connectionStringToCK11, _nameOfModel, 270);
+            //        var model = new SynchronizeModel(_connectionStringToCK11, _nameOfModel, 270);
 
-                    var uuidBranchFolder = "2F9E9FFE-755E-4BA7-85A6-0BE43626FE8A";
-                    var uuidSubstations = "AFEBCA7A-7607-4B5F-BED7-0FD5F387CB94";
-                    var uuidLines = "36C6AC72-18DE-4C99-8682-5BDB7E6F1668";
+            //        var uuidBranchFolder = "2F9E9FFE-755E-4BA7-85A6-0BE43626FE8A";
+            //        var uuidSubstations = "AFEBCA7A-7607-4B5F-BED7-0FD5F387CB94";
+            //        var uuidLines = "36C6AC72-18DE-4C99-8682-5BDB7E6F1668";
 
-                    //var powerUuids = model.UpdatePowerUuid(uuidBranchFolder);
-                    //var voltageUuids = model.UpdateVoltageUuid(uuidSubstations);
-                    //var currentUuids = model.UpdateCurrentUuid(uuidLines);
-                    //Console.WriteLine("Синхронизация с ИМ.");
-                    //dataBase.InsertUuids(powerUuids, nameof(DataBaseTables.Powers));
-                    //dataBase.InsertUuids(voltageUuids, nameof(DataBaseTables.Voltages));
-                    //dataBase.InsertUuids(currentUuids, nameof(DataBaseTables.Currents));
+            //        //var powerUuids = model.UpdatePowerUuid(uuidBranchFolder);
+            //        //var voltageUuids = model.UpdateVoltageUuid(uuidSubstations);
+            //        //var currentUuids = model.UpdateCurrentUuid(uuidLines);
+            //        //Console.WriteLine("Синхронизация с ИМ.");
+            //        //dataBase.InsertUuids(powerUuids, nameof(DataBaseTables.Powers));
+            //        //dataBase.InsertUuids(voltageUuids, nameof(DataBaseTables.Voltages));
+            //        //dataBase.InsertUuids(currentUuids, nameof(DataBaseTables.Currents));
 
-                    var starTime = DateTime.Now;
-                    Console.WriteLine("Запрос uuid из БД Системы");
-                    var dataCurrent = dataBase.SelectUuid(nameof(DataBaseTables.Currents));
-                    var dataPower = dataBase.SelectUuid(nameof(DataBaseTables.Powers));
-                    var dataVoltage = dataBase.SelectUuid(nameof(DataBaseTables.Voltages));
+            //        var starTime = DateTime.Now;
+            //        Console.WriteLine("Запрос uuid из БД Системы");
+            //        var dataCurrent = dataBase.SelectUuid(nameof(DataBaseTables.Currents));
+            //        var dataPower = dataBase.SelectUuid(nameof(DataBaseTables.Powers));
+            //        var dataVoltage = dataBase.SelectUuid(nameof(DataBaseTables.Voltages));
 
-                    var voltageList = new List<SignalVoltage>();
-                    var currentList = new List<SignalCurrent>();
-                    var powerList = new List<SignalPower>();
+            //        var voltageList = new List<SignalVoltage>();
+            //        var currentList = new List<SignalCurrent>();
+            //        var powerList = new List<SignalPower>();
 
-                    time = DateTime.Now;
-                    Console.WriteLine("Запрос данных из БДРВ");
-                    foreach (var value in dataVoltage)
-                    {
+            //        time = DateTime.Now;
+            //        Console.WriteLine("Запрос данных из БДРВ");
+            //        foreach (var value in dataVoltage)
+            //        {
 
-                        var tempData = new Verification(dataRequest.GetSignals(value.Value));
+            //            var tempData = new Verification(dataRequest.GetSignals(value.Value));
 
-                        var data = tempData.GetValidData();
-                        var nomVoltage = 0d;
+            //            var data = tempData.GetValidData();
+            //            var nomVoltage = 0d;
 
-                        if (data[1].Value.AnalogValue > 500d)
-                        {
-                            nomVoltage = 500d;
-                        }
-                        else
-                        {
-                            nomVoltage = 220d;
-                        }
+            //            if (data[1].Value.AnalogValue > 500d)
+            //            {
+            //                nomVoltage = 500d;
+            //            }
+            //            else
+            //            {
+            //                nomVoltage = 220d;
+            //            }
 
-                        voltageList.Add(new SignalVoltage(value.Key,
-                            data[0].Value.AnalogValue,
-                           (DateTime)data[0].Time,
-                            data[1].Value.AnalogValue,
-                            data[2].Value.AnalogValue,
-                            nomVoltage));
-                    }
+            //            voltageList.Add(new SignalVoltage(value.Key,
+            //                data[0].Value.AnalogValue,
+            //               (DateTime)data[0].Time,
+            //                data[1].Value.AnalogValue,
+            //                data[2].Value.AnalogValue,
+            //                nomVoltage));
+            //        }
 
-                    Console.WriteLine("Фильтрация данных по коду качества.");
-                    foreach (var value in dataCurrent)
-                    {
-                        var tempData = new Verification(dataRequest.GetSignals(value.Value));
-                        var data = tempData.GetValidData();
-                        currentList.Add(new SignalCurrent(value.Key,
-                            data[0].Value.AnalogValue,
-                            (DateTime)data[0].Time,
-                            data[1].Value.AnalogValue));
-                    }
+            //        Console.WriteLine("Фильтрация данных по коду качества.");
+            //        foreach (var value in dataCurrent)
+            //        {
+            //            var tempData = new Verification(dataRequest.GetSignals(value.Value));
+            //            var data = tempData.GetValidData();
+            //            currentList.Add(new SignalCurrent(value.Key,
+            //                data[0].Value.AnalogValue,
+            //                (DateTime)data[0].Time,
+            //                data[1].Value.AnalogValue));
+            //        }
 
-                    foreach (var value in dataPower)
-                    {
-                        var tempData = new Verification(dataRequest.GetSignals(value.Value));
-                        var data = tempData.GetValidData();
-                        powerList.Add(new SignalPower(value.Key,
-                            data[0].Value.AnalogValue,
-                            (DateTime)data[0].Time,
-                            data[1].Value.AnalogValue));
-                    }
+            //        foreach (var value in dataPower)
+            //        {
+            //            var tempData = new Verification(dataRequest.GetSignals(value.Value));
+            //            var data = tempData.GetValidData();
+            //            powerList.Add(new SignalPower(value.Key,
+            //                data[0].Value.AnalogValue,
+            //                (DateTime)data[0].Time,
+            //                data[1].Value.AnalogValue));
+            //        }
 
-                    Console.WriteLine("Подготовка данных к расчету.");
-                    var preparingData = new PreparingData(
-                        powerList.ToArray(),
-                        voltageList.ToArray(),
-                        currentList.ToArray());
+            //        Console.WriteLine("Подготовка данных к расчету.");
+            //        var preparingData = new PreparingData(
+            //            powerList.ToArray(),
+            //            voltageList.ToArray(),
+            //            currentList.ToArray());
 
-                    var voltages = preparingData.PreparingNodeData();
-                    var currents = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
-                    var powers = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
+            //        var voltages = preparingData.PreparingNodeData();
+            //        var currents = preparingData.PreparingBranchData(nameof(preparingData.CurrentSignals));
+            //        var powers = preparingData.PreparingBranchData(nameof(preparingData.PowerSignals));
 
-                    var calc = new Calculation(powers, currents, voltages);
+            //        var calc = new Calculation(powers, currents, voltages);
 
-                    Console.WriteLine("Начало расчета");
-                    var index = calc.GetPerformanceIndex();
-                    Console.WriteLine("Результаты расчета расчета");
-                    Console.WriteLine(index.Value);
+            //        Console.WriteLine("Начало расчета");
+            //        var index = calc.GetPerformanceIndex();
+            //        Console.WriteLine("Результаты расчета расчета");
+            //        Console.WriteLine(index.Value);
 
-                    calc.CurrentIndex.Columns.Remove("Time");
-                    calc.VoltagetIndex.Columns.Remove("Time");
-                    calc.PowerIndex.Columns.Remove("Time");
-                    Console.WriteLine(calc.CurrentIndex.ToString());
-                    Console.WriteLine(calc.VoltagetIndex);
-                    Console.WriteLine(calc.PowerIndex);
+            //        calc.CurrentIndex.Columns.Remove("Time");
+            //        calc.VoltagetIndex.Columns.Remove("Time");
+            //        calc.PowerIndex.Columns.Remove("Time");
+            //        Console.WriteLine(calc.CurrentIndex.ToString());
+            //        Console.WriteLine(calc.VoltagetIndex);
+            //        Console.WriteLine(calc.PowerIndex);
 
-                    var stopTime = DateTime.Now;
-                    Console.WriteLine("Время расчета:");
-                    Console.WriteLine((stopTime - starTime).TotalSeconds);
+            //        var stopTime = DateTime.Now;
+            //        Console.WriteLine("Время расчета:");
+            //        Console.WriteLine((stopTime - starTime).TotalSeconds);
 
 
-                    Console.WriteLine("Передача результата в СК-11");
+            //        Console.WriteLine("Передача результата в СК-11");
 
-                    send.SendIndex(server, index, _coa, _ioa, true);
+            //        send.SendIndex(server, index, _coa, _ioa, true);
 
-                    var rateOfChange = new PerformanceIndex(0, dataBase.GetRateOfChange(index), time);
-                    var increment = new PerformanceIndex(2, dataBase.GetIncrementOfIndex(index), time);
+            //        var rateOfChange = new PerformanceIndex(0, dataBase.GetRateOfChange(index), time);
+            //        var increment = new PerformanceIndex(2, dataBase.GetIncrementOfIndex(index), time);
 
-                    send.SendIndex(server, rateOfChange, _coa, 1001, true);
-                    send.SendIndex(server, increment, _coa, 1000, true);
+            //        send.SendIndex(server, rateOfChange, _coa, 1001, true);
+            //        send.SendIndex(server, increment, _coa, 1000, true);
 
-                    Console.WriteLine("Cкорость приращения:" + rateOfChange.Value);
-                    Console.WriteLine("Приращение: " + increment.Value);
-                    //throw new ArgumentException("test");
-                    send.WriteLocalIndex(_pathLocalResult, calc);
+            //        Console.WriteLine("Cкорость приращения:" + rateOfChange.Value);
+            //        Console.WriteLine("Приращение: " + increment.Value);
+            //        throw new ArgumentException("test");
+            //        send.WriteLocalIndex(_pathLocalResult, calc);
 
-                    //dataBase.InsertPerformanceIndex(nameof(DataBaseTables.Calculations), index);
+            //        //dataBase.InsertPerformanceIndex(nameof(DataBaseTables.Calculations), index);
 
-                    Console.WriteLine("Finish");
-                    Console.ReadKey();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.Source);
-                    Console.WriteLine(e.TargetSite);
-                    dataBase.InsertLog(e.Message, time);
-                    send.SendIndex(server, new PerformanceIndex(0, 0, time), _coa, _ioa, false);
-                    Console.WriteLine("finish with error");
-                    Console.ReadKey();
-                }
-            }
+            //        Console.WriteLine("Finish");
+            //        Console.ReadKey();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Console.WriteLine(e.Message);
+            //        Console.WriteLine(e.Source);
+            //        Console.WriteLine(e.TargetSite);
+            //        dataBase.InsertLog(e.Message, time);
+            //        send.SendIndex(server, new PerformanceIndex(0, 0, time), _coa, _ioa, false);
+            //        Console.WriteLine("finish with error");
+            //        Console.ReadKey();
+            //    }
+            //}
         }
     }
 }

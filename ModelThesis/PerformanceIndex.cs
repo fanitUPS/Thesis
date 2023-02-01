@@ -15,7 +15,7 @@ namespace ModelThesis
         /// <summary>
         /// Зачение показателя
         /// </summary>
-        public double Value { get; private set; }
+        public double Value { get; set; }
 
         /// <summary>
         /// Метка времени
